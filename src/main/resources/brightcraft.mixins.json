@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.brightshard.brightcraft.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BlockMixin",
+    "ClientPlayerInteractionManagerMixin",
+    "ClientPlayerNetworkHandlerMixin",
+    "GameRendererMixin",
+    "MinecraftClientMixin",
+    "PlayerEntityMixin"
+  ],
+  "client": [
+    "GameMenuScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

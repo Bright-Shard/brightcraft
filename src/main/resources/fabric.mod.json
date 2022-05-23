@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "brightcraft",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "BrightCraft",
+  "description": "The 1337 version of Minecraft.",
   "authors": [
-    "Me!"
+    "BrightShard"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
@@ -14,16 +14,16 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/brightcraft/icon.png",
 
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "net.fabricmc.example.ExampleMod"
+    "client": [
+      "dev.brightshard.brightcraft.Main"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "brightcraft.mixins.json"
   ],
 
   "depends": {
