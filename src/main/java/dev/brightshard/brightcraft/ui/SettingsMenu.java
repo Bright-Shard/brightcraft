@@ -4,6 +4,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
 import dev.brightshard.brightcraft.lib.Hack;
+import static dev.brightshard.brightcraft.Main.LOGGER;
 
 public class SettingsMenu extends BrightScreen {
     private static final SettingsMenu instance = new SettingsMenu();
@@ -24,6 +25,8 @@ public class SettingsMenu extends BrightScreen {
                 this.refresh();
             });
         }
+
+        this.addSlider("Fly Speed", 0.5, (slider) -> LOGGER.info(String.valueOf(slider.getValue())), this);
 
         this.addButton("AntiCheat Config", "Change settings to avoid anticheat", (btn) -> client.setScreen(AnticheatMenu.getInstance()), true);
     }

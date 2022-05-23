@@ -24,9 +24,18 @@ public abstract class BrightScreen extends Screen {
     }
 
     protected void addButton(String name, String tooltip, ButtonWidget.PressAction func, boolean large) {
-        ButtonWidget btn = Button.button(name, tooltip, func, this, large);
-        this.addDrawableChild(btn);
+        if (large && column == 1) {
+            this.row += 1;
+        } else if (large) {
+            this.column = 1;
+        }
+        this.addDrawableChild(new Button(name, tooltip, func, this, large));
+        this.updateGrid();
+    }
 
+    protected void addSlider(String text, double value, Slider.valueUpdateAction onValueUpdate, BrightScreen parent) {
+        this.addDrawableChild(new Slider(text, value, onValueUpdate, parent));
+        this.column = 1;
         this.updateGrid();
     }
 
@@ -42,5 +51,12 @@ public abstract class BrightScreen extends Screen {
             column = 0;
             ++row;
         }
+    }
+
+    public int getX(boolean large) {
+        return (width / 2) - (large ? 105 : (column == 0 ? 105 : -5));
+    }
+    public int getY() {
+        return 50 + (30 * row);
     }
 }
