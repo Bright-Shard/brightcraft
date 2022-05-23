@@ -76,11 +76,11 @@ public class PlayerManager {
     }
 
     public Vec3d moveUp(double amount) {
-        return new Vec3d(0, amount, 0);
+        return this.getVelocity().add(new Vec3d(0, amount, 0));
 
     }
     public Vec3d moveDown(double amount) {
-        return new Vec3d(0, -amount, 0);
+        return this.getVelocity().subtract(new Vec3d(0, amount, 0));
     }
     public Vec3d moveForwards(double amount) {
         return this.getRot().multiply(amount);

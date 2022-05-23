@@ -44,7 +44,6 @@ public class Fly extends Hack {
         // If the player is flying, allow strafing controls & make them hover
         if (playerManager.flying()) {
             // Strafe controls
-            //player.airStrafingSpeed = (float) flySpeed;
             if (client.options.forwardKey.isPressed()) {
                 newVelocity = addVec(newVelocity, playerManager.moveForwards(flySpeed));
             }
@@ -68,7 +67,7 @@ public class Fly extends Hack {
 
             // Move the player
             playerManager.setVelocity(newVelocity);
-            newVelocity = new Vec3d(0, 0, 0);
+            newVelocity = Vec3d.ZERO;
         }
 
         // Start the timer for the second space bar hit if it was hit once
