@@ -1,5 +1,6 @@
-package dev.brightshard.brightcraft.ui;
+package dev.brightshard.brightcraft.ui.widgets;
 
+import dev.brightshard.brightcraft.ui.widgets.BrightScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;

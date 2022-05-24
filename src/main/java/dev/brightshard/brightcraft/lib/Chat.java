@@ -9,11 +9,7 @@ public class Chat {
     public static String on = "[§2ON§r]";
     public static String off = "[§4OFF§r]";
 
-    public Chat(boolean longMessage) {
-        if (longMessage) {
-            this.longMessage = "";
-        }
-    }
+    public Chat() {}
     public Chat(Text text) {
         PlayerManager.getInstance().getPlayer().sendSystemMessage(text, null);
     }
@@ -29,6 +25,6 @@ public class Chat {
         this.longMessage = this.longMessage.concat(text);
     }
     public void sendLongMessage() {
-        new Chat(this.longMessage);
+        PlayerManager.getInstance().getPlayer().sendSystemMessage(Text.of(this.longMessage), null);
     }
 }

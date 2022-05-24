@@ -1,9 +1,11 @@
 package dev.brightshard.brightcraft.ui;
 
+import dev.brightshard.brightcraft.ui.widgets.BrightScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
 import dev.brightshard.brightcraft.lib.Hack;
+
 import static dev.brightshard.brightcraft.Main.LOGGER;
 
 public class SettingsMenu extends BrightScreen {
@@ -26,7 +28,19 @@ public class SettingsMenu extends BrightScreen {
             });
         }
 
-        this.addSlider("Fly Speed", 0.5, (slider) -> LOGGER.info(String.valueOf(slider.getValue())), this);
+        double flySpeed;
+        try {
+            flySpeed = Double.parseDouble(config.getConfig("FlySpeed"));
+        } catch (NumberFormatException e) {
+            flySpeed = 1;
+            config.setConfig("FlySpeed", String.valueOf(flySpeed));
+        }
+        LOGGER.info(String.valueOf(flySpeed));
+
+        this.addSlider("Fly Speed", flySpeed, 0.5, 5, (slider) -> {
+            double newFlySpeed = slider.getValue();
+            config.setConfig("FlySpeed", String.valueOf(newFlySpeed));
+        }, this);
 
         this.addButton("AntiCheat Config", "Change settings to avoid anticheat", (btn) -> client.setScreen(AnticheatMenu.getInstance()), true);
     }
