@@ -7,6 +7,16 @@ This mod runs on [Fabric](https://fabricmc.net), and requires the [Fabric API](h
 
 
 
+# Downloading
+To download: Go [here](https://github.com/Bright-Shard/BrightCraft/actions/workflows/build.yml), click the top
+build, and click "artifacts". Extract the .zip file it downloads, and then copy the `brightcraft-x.x.x.jar` file to 
+your mods folder. **Don't use the `brightcraft-x.x.x.sources.jar` file - that's not the mod**.
+
+I know this download process is a bit weird. It's just because GitHub is automagically building the mod for me when
+I push an update, which makes updating BrightCraft *way* easier.
+
+
+
 # Use
 ***NOTICE***: BrightCraft was just made for fun on singleplayer worlds or servers that support cheating. BrightCraft
 was *not* made for use on public servers (e.g. Hypixel) and will *certainly* get you banned (BrightCraft doesn't have
