@@ -1,5 +1,6 @@
-package dev.brightshard.brightcraft.ui;
+package dev.brightshard.brightcraft.ui.widgets;
 
+import dev.brightshard.brightcraft.lib.MathTools;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.Text;
 
@@ -7,16 +8,21 @@ import static dev.brightshard.brightcraft.Main.LOGGER;
 
 public class Slider extends SliderWidget {
     private final valueUpdateAction onValueUpdate;
-    public Slider(String text, double value, valueUpdateAction onValueUpdate, BrightScreen parent) {
+    private double mappedValue;
+    private final double min;
+    private final double max;
+    public Slider(String text, double value, double min, double max, valueUpdateAction onValueUpdate, BrightScreen parent) {
         super(
                 parent.getX(true),
                 parent.getY(),
                 210,
                 20,
                 Text.of(text),
-                value
+                MathTools.map(value, min, max, 0, 1)
         );
         this.onValueUpdate = onValueUpdate;
+        this.min = min;
+        this.max = max;
     }
 
     public interface valueUpdateAction {
@@ -24,13 +30,17 @@ public class Slider extends SliderWidget {
     }
 
     public double getValue() {
-        return this.value;
+        return this.mappedValue;
     }
 
+    // updateMessage - Called every time the slider moves
     @Override
     protected void updateMessage() {}
+    // applyValue - Called when the slider moves AND has a new value
     @Override
     protected void applyValue() {
+        this.mappedValue = MathTools.map(this.value, 0, 1, this.min, this.max);
+        LOGGER.info(String.valueOf(this.mappedValue));
         this.onValueUpdate.onValueUpdate(this);
     }
 }

@@ -1,5 +1,6 @@
 package dev.brightshard.brightcraft.ui;
 
+import dev.brightshard.brightcraft.ui.widgets.BrightScreen;
 import net.minecraft.text.Text;
 
 public class AnticheatMenu extends BrightScreen {

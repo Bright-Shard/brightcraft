@@ -103,7 +103,7 @@ public class Main implements ClientModInitializer {
 			this.worldJoined = true;
 			return;
 		}
-		Chat chat = new Chat(true);
+		Chat chat = new Chat();
 		chat.addToMessage(Chat.divider);
 		chat.addToMessage("\n"+Chat.label+"Current hack statuses:\n");
 		for (Hack hack : Hack.getHacks()) {

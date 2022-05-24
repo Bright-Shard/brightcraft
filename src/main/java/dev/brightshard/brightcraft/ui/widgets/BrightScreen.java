@@ -1,4 +1,4 @@
-package dev.brightshard.brightcraft.ui;
+package dev.brightshard.brightcraft.ui.widgets;
 
 import dev.brightshard.brightcraft.lib.Config;
 import dev.brightshard.brightcraft.lib.PlayerManager;
@@ -33,8 +33,8 @@ public abstract class BrightScreen extends Screen {
         this.updateGrid();
     }
 
-    protected void addSlider(String text, double value, Slider.valueUpdateAction onValueUpdate, BrightScreen parent) {
-        this.addDrawableChild(new Slider(text, value, onValueUpdate, parent));
+    protected void addSlider(String text, double value, double min, double max, Slider.valueUpdateAction onValueUpdate, BrightScreen parent) {
+        this.addDrawableChild(new Slider(text, value, min, max, onValueUpdate, parent));
         this.column = 1;
         this.updateGrid();
     }
