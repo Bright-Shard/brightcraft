@@ -8,12 +8,9 @@ This mod runs on [Fabric](https://fabricmc.net), and requires the [Fabric API](h
 
 
 # Downloading
-To download: Go [here](https://github.com/Bright-Shard/BrightCraft/actions/workflows/build.yml), click the top
-build, and click "artifacts". Extract the .zip file it downloads, and then copy the `brightcraft-x.x.x.jar` file to 
-your mods folder. **Don't use the `brightcraft-x.x.x.sources.jar` file - that's not the mod**.
-
-I know this download process is a bit weird. It's just because GitHub is automagically building the mod for me when
-I push an update, which makes updating BrightCraft *way* easier.
+Go [here](https://github.com/Bright-Shard/BrightCraft/releases/tag/latest), and click `brightcraft-x.x.x.jar`
+to download the latest version. Don't worry about the rest of the text; that's just the latest changes to BrightCraft,
+and the other downloads are for downloading the source code.
 
 
 
