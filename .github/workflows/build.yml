@@ -29,6 +29,10 @@ jobs:
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build
+      - name: remove sources file
+        run: rm build/libs/**-sources.jar
+      - name: rename jar
+        run: mv build/libs/*.jar build/libs/brightcraft.jar
       - name: capture build artifacts
         if: ${{ matrix.java == '17' }}
         uses: actions/upload-artifact@v2
@@ -43,4 +47,4 @@ jobs:
           title: "BrightCraft Release (Auto-Generated)"
           files: |
             LICENSE
-            build/libs/brightcraft-[0-9].[0-9].[0-9].jar
+            build/libs/brightcraft.jar
