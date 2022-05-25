@@ -1,5 +1,7 @@
 # BrightCraft
 [![build](https://github.com/Bright-Shard/BrightCraft/actions/workflows/build.yml/badge.svg)](https://github.com/Bright-Shard/BrightCraft/actions/workflows/build.yml)
+[![Release](https://img.shields.io/badge/Release-Latest-blue)](https://github.com/Bright-Shard/BrightCraft/releases/tag/latest)
+[![Download](https://img.shields.io/badge/Download-Latest%20Release-blue)](https://github.com/Bright-Shard/BrightCraft/releases/download/latest/brightcraft.jar)
 
 I learned Java by making cheats for Minecraft. Genius.
 
@@ -8,9 +10,9 @@ This mod runs on [Fabric](https://fabricmc.net), and requires the [Fabric API](h
 
 
 # Downloading
-Go [here](https://github.com/Bright-Shard/BrightCraft/releases/tag/latest), and click `brightcraft-x.x.x.jar`
-to download the latest version. Don't worry about the rest of the text; that's just the latest changes to BrightCraft,
-and the other downloads are for downloading the source code.
+Press the big blue button!
+
+[![Download](https://img.shields.io/badge/Download-Latest%20Release-blue)](https://github.com/Bright-Shard/BrightCraft/releases/download/latest/brightcraft.jar)
 
 
 
