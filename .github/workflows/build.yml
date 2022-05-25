@@ -26,13 +26,22 @@ jobs:
         with:
           java-version: ${{ matrix.java }}
       - name: make gradle wrapper executable
-        if: ${{ runner.os != 'Windows' }}
         run: chmod +x ./gradlew
       - name: build
         run: ./gradlew build
       - name: capture build artifacts
-        if: ${{ runner.os == 'Linux' && matrix.java == '17' }} # Only upload artifacts built from latest java on one OS
+        if: ${{ && matrix.java == '17' }}
         uses: actions/upload-artifact@v2
         with:
           name: Artifacts
           path: build/libs/
+      - name: Automatic Releases
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "BrightCraft Release (Auto-Generated)"
+          files: |
+            LICENSE
+            build/libs/brightcraft-[0-9].[0-9].[0-9].jar
