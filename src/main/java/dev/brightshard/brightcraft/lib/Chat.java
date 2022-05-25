@@ -3,7 +3,7 @@ package dev.brightshard.brightcraft.lib;
 import net.minecraft.text.Text;
 
 public class Chat {
-    private String longMessage;
+    private String longMessage = "";
     public static String divider = "§kbruhbruhbruhbruhbruhbruhbruhbruh§r";
     public static String label = "[§aBrightCraft§r] ";
     public static String on = "[§2ON§r]";
