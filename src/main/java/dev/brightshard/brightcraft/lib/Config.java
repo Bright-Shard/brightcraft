@@ -1,6 +1,5 @@
 package dev.brightshard.brightcraft.lib;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -80,10 +79,47 @@ public class Config {
 
     public void load() {
         this.visibleBlocks = new Block[]{
+                // Iron
                 Blocks.IRON_ORE,
+                Blocks.DEEPSLATE_IRON_ORE,
                 Blocks.IRON_BLOCK,
+                Blocks.RAW_IRON_BLOCK,
+                // Diamond
                 Blocks.DIAMOND_ORE,
-                Blocks.DIAMOND_BLOCK
+                Blocks.DEEPSLATE_DIAMOND_ORE,
+                Blocks.DIAMOND_BLOCK,
+                // Gold
+                Blocks.GOLD_ORE,
+                Blocks.DEEPSLATE_GOLD_ORE,
+                Blocks.NETHER_GOLD_ORE,
+                Blocks.GOLD_BLOCK,
+                Blocks.RAW_GOLD_BLOCK,
+                // Copper
+                Blocks.COPPER_ORE,
+                Blocks.DEEPSLATE_COPPER_ORE,
+                Blocks.COPPER_BLOCK,
+                Blocks.RAW_COPPER_BLOCK,
+                // Coal
+                Blocks.COAL_ORE,
+                Blocks.DEEPSLATE_COAL_ORE,
+                Blocks.COAL_BLOCK,
+                // Netherite
+                Blocks.ANCIENT_DEBRIS,
+                Blocks.NETHERITE_BLOCK,
+                // Amethyst
+                Blocks.AMETHYST_BLOCK,
+                Blocks.AMETHYST_CLUSTER,
+                Blocks.BUDDING_AMETHYST,
+                Blocks.SMALL_AMETHYST_BUD,
+                Blocks.MEDIUM_AMETHYST_BUD,
+                Blocks.LARGE_AMETHYST_BUD,
+                // Chests
+                Blocks.CHEST,
+                Blocks.ENDER_CHEST,
+                // End
+                Blocks.END_PORTAL,
+                Blocks.END_PORTAL_FRAME,
+                Blocks.END_GATEWAY
         };
         this.defaultGamma = PlayerManager.getInstance().getClient().options.gamma;
         this.loaded = true;
