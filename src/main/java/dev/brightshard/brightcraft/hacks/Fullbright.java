@@ -17,6 +17,7 @@ public class Fullbright extends Hack {
     }
     @Override
     public void onDisable() {
+        LOGGER.info(String.valueOf(config.defaultGamma));
         client.options.gamma = config.defaultGamma;
         client.worldRenderer.reload();
     }

@@ -1,5 +1,6 @@
 package dev.brightshard.brightcraft.mixin;
 
+import dev.brightshard.brightcraft.lib.EventManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -17,13 +18,13 @@ import java.util.Arrays;
 
 @Mixin(net.minecraft.block.Block.class)
 public class BlockMixin {
-    private static Hack xray = Hack.getHackById("XRay");
 
     @Inject(at = @At("RETURN"), method = "shouldDrawSide(Lnet/minecraft/block/BlockState;" +
             "Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;" +
             "Lnet/minecraft/util/math/BlockPos;)Z", cancellable = true)
     private static void shouldDrawSide(BlockState state, BlockView view, BlockPos pos, Direction dir, BlockPos otherPos,
                                        CallbackInfoReturnable<Boolean> cir) {
+        /*
         if (xray == null) {
             xray = Hack.getHackById("XRay");
         } else if (xray.enabled()) {
@@ -33,5 +34,6 @@ public class BlockMixin {
                 cir.setReturnValue(false);
             }
         }
+         */
     }
 }
