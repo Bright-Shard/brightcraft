@@ -1,7 +1,7 @@
 # BrightCraft
 [![build](https://github.com/Bright-Shard/BrightCraft/actions/workflows/build.yml/badge.svg)](https://github.com/Bright-Shard/BrightCraft/actions/workflows/build.yml)
-[![Release](https://img.shields.io/badge/Release-Latest-blue)](https://github.com/Bright-Shard/BrightCraft/releases/tag/latest)
-[![Download](https://img.shields.io/badge/Download-Latest%20Release-blue)](https://github.com/Bright-Shard/BrightCraft/releases/download/latest/brightcraft.jar)
+[![release](https://img.shields.io/badge/release-latest-blue)](https://github.com/Bright-Shard/BrightCraft/releases/tag/latest)
+[![download](https://img.shields.io/badge/download-latest%20release-blue)](https://github.com/Bright-Shard/BrightCraft/releases/download/latest/brightcraft.jar)
 
 I learned Java by making cheats for Minecraft. Genius.
 
@@ -12,7 +12,7 @@ This mod runs on [Fabric](https://fabricmc.net), and requires the [Fabric API](h
 # Downloading
 Press the big blue button!
 
-[![Download](https://img.shields.io/badge/Download-Latest%20Release-blue)](https://github.com/Bright-Shard/BrightCraft/releases/download/latest/brightcraft.jar)
+[![download](https://img.shields.io/badge/download-latest%20release-blue)](https://github.com/Bright-Shard/BrightCraft/releases/download/latest/brightcraft.jar)
 
 
 
@@ -20,16 +20,21 @@ Press the big blue button!
 ***NOTICE***: BrightCraft was just made for fun on singleplayer worlds or servers that support cheating. BrightCraft
 was *not* made for use on public servers (e.g. Hypixel) and will *certainly* get you banned (BrightCraft doesn't have
 many anticheat bypasses). Please don't ruin other peoples' fun with these cheats.
+
+Obviously, if you do get banned by using these cheats, I'm not responsible. I'm actively telling you to *not* use them
+on public servers. If you disregard that and get banned, **it's your fault, not mine**.
+
 ## Cheats
-- NoClip (Only works on COMPLETELY vanilla servers & singleplayer)
+- NoClip (Only works on singleplayer)
 - Fly
+- Jetpack
 - NoFallDamage
 - FastBreak
 - FullBright
-- XRay
+- XRay (Currently incompatible with shader mods, like Iris or Optifine/Optifabric)
 
 ## Other Features
-- GUI to customize/toggle cheats (Open from in-game settings or RSHIFT)
+- GUI to customize/toggle cheats (Open from in-game settings or by pressing RSHIFT)
 - Keybinds to toggle cheats (Change from the in-game controls settings)
 - When cheats are toggled, BrightCraft notifies you in-chat (Of course, only you can see that chat)
 - Whenever you join a world/server, BrightCraft tells you what cheats are currently enabled in-chat
@@ -45,5 +50,5 @@ I learned from their code.
 
 This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
 
-In non-legal terms, use this project's code however you want. In fact, if you're wanting to find out how specific
-features work, I have a table of contents explaining the project's layout [here](toc.md).
+Seriously, use this project's code however you want. In fact, if you're wanting to find out how specific features work,
+I have a table of contents explaining the project's layout/what each file does [here](toc.md).

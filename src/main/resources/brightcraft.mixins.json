@@ -7,9 +7,9 @@
     "BlockMixin",
     "ClientPlayerInteractionManagerMixin",
     "ClientPlayerNetworkHandlerMixin",
-    "GameRendererMixin",
+    "ClientWorldMixin",
     "MinecraftClientMixin",
-    "PlayerEntityMixin"
+    "ClientPlayerEntityMixin"
   ],
   "client": [
     "GameMenuScreenMixin"
