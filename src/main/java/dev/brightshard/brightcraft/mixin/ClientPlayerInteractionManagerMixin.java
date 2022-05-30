@@ -1,10 +1,10 @@
 package dev.brightshard.brightcraft.mixin;
 
-import dev.brightshard.brightcraft.lib.Config;
-import dev.brightshard.brightcraft.lib.Hack;
-import static dev.brightshard.brightcraft.Main.LOGGER;
+import dev.brightshard.brightcraft.lib.*;
 
-import dev.brightshard.brightcraft.lib.PlayerManager;
+import dev.brightshard.brightcraft.managers.EventManager;
+import dev.brightshard.brightcraft.managers.InteractionManager;
+import dev.brightshard.brightcraft.managers.PlayerManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.util.math.BlockPos;
@@ -18,39 +18,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(net.minecraft.client.network.ClientPlayerInteractionManager.class)
-public abstract class ClientPlayerInteractionManagerMixin {
-    @Final
-    @Shadow
-    private MinecraftClient client;
+public abstract class ClientPlayerInteractionManagerMixin implements InteractionManager {
     @Shadow
     private float currentBreakingProgress;
-
     @Shadow
     protected abstract void sendPlayerAction(PlayerActionC2SPacket.Action action, BlockPos pos, Direction direction);
-    @Shadow
-    public abstract boolean breakBlock(BlockPos pos);
 
-    private Hack instabreak = Hack.getHackById("Instabreak");
-    private PlayerManager playerManager = PlayerManager.getInstance();
+    @Override
+    public void sendAction(PlayerActionC2SPacket.Action action, BlockPos pos, Direction direction) {
+        sendPlayerAction(action, pos, direction);
+    }
+    @Override
+    public void setCurrentBreakingProgress(int amount) {
+        this.currentBreakingProgress = amount;
+    }
 
     @Inject(method = "updateBlockBreakingProgress(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z",
     at = @At("HEAD"))
     private void updateBlockBreakingProgress(BlockPos pos, Direction dir, CallbackInfoReturnable<Boolean> cir) {
-        if (client.interactionManager == null || instabreak == null) {
-            instabreak = Hack.getHackById("Instabreak");
-            playerManager = PlayerManager.getInstance();
-        } else if (instabreak.enabled()) {
-            this.sendPlayerAction(PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK, pos, dir);
-        }
+        EventManager.getInstance().fireEvent("BlockBreaking", cir, new Object[]{pos, dir});
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
-        if (instabreak == null || playerManager == null ||!playerManager.ready()) {
-            instabreak = Hack.getHackById("Instabreak");
-            playerManager = PlayerManager.getInstance();
-        } else if (instabreak.enabled() && Config.getInstance().getConfig("Instabreak.Bypass").equals("false")) {
-            this.currentBreakingProgress = 0;
-        }
+        EventManager.getInstance().fireEvent("BreakingProgressChanged", null, null);
     }
 }

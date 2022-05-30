@@ -39,7 +39,7 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
-      - name: Automatic Releases
+      - name: auto-release
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"

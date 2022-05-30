@@ -1,5 +1,6 @@
 package dev.brightshard.brightcraft.lib;
 
+import dev.brightshard.brightcraft.managers.PlayerManager;
 import net.minecraft.text.Text;
 
 public class Chat {
@@ -10,21 +11,22 @@ public class Chat {
     public static String off = "[§4OFF§r]";
 
     public Chat() {}
-    public Chat(Text text) {
-        PlayerManager.getInstance().getPlayer().sendSystemMessage(text, null);
-    }
     public Chat(String text) {
-        new Chat(Text.of(label + text));
+        PlayerManager.getInstance().localChat(label + text);
     }
 
     public Chat(Hack hack) {
-        new Chat(Text.of(label + hack.name + ": " + (hack.enabled() ? on : off)));
+        new Chat(hack.name + ": " + (hack.enabled() ? on : off));
     }
 
     public void addToMessage(String text) {
         this.longMessage = this.longMessage.concat(text);
     }
-    public void sendLongMessage() {
-        PlayerManager.getInstance().getPlayer().sendSystemMessage(Text.of(this.longMessage), null);
+    public void clear() {
+        this.longMessage = "";
+    }
+    public void send() {
+        PlayerManager.getInstance().localChat(this.longMessage);
+        this.clear();
     }
 }

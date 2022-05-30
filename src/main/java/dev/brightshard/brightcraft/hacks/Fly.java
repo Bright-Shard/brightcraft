@@ -7,8 +7,9 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
 
+import static dev.brightshard.brightcraft.lib.MathTools.addVectors;
+
 public class Fly extends Hack {
-    private int doubleSpaceTimer = -1;
     private Vec3d newVelocity = new Vec3d(0, 0, 0);
 
     public Fly() {
@@ -17,11 +18,13 @@ public class Fly extends Hack {
 
     @Override
     public void onEnable() {
-
+        Hack.getHackById("Jetpack").disable();
+        player.flying(true);
     }
     @Override
     public void onDisable() {
         Objects.requireNonNull(Hack.getHackById("NoClip")).disable();
+        player.flying(false);
     }
 
     @Override
@@ -36,51 +39,30 @@ public class Fly extends Hack {
             config.setConfig("FlySpeed", "1.0");
         }
 
-        // Enable flight if space bar is hit twice before the time runs out
-        if (doubleSpaceTimer >= 0 && doubleSpaceTimer < 4 && client.options.jumpKey.isPressed()) {
-            playerManager.flying(!playerManager.flying());
+        // Strafe controls
+        if (client.options.forwardKey.isPressed()) {
+            newVelocity = addVectors(newVelocity, player.moveForwards(flySpeed));
+        }
+        if (client.options.backKey.isPressed()) {
+            newVelocity = addVectors(newVelocity, player.moveBackwards(flySpeed));
+        }
+        if (client.options.leftKey.isPressed()) {
+            newVelocity = addVectors(newVelocity, player.moveLeft(flySpeed));
+        }
+        if (client.options.rightKey.isPressed()) {
+            newVelocity = addVectors(newVelocity, player.moveRight(flySpeed));
         }
 
-        // If the player is flying, allow strafing controls & make them hover
-        if (playerManager.flying()) {
-            // Strafe controls
-            if (client.options.forwardKey.isPressed()) {
-                newVelocity = addVec(newVelocity, playerManager.moveForwards(flySpeed));
-            }
-            if (client.options.backKey.isPressed()) {
-                newVelocity = addVec(newVelocity, playerManager.moveBackwards(flySpeed));
-            }
-            if (client.options.leftKey.isPressed()) {
-                newVelocity = addVec(newVelocity, playerManager.moveLeft(flySpeed));
-            }
-            if (client.options.rightKey.isPressed()) {
-                newVelocity = addVec(newVelocity, playerManager.moveRight(flySpeed));
-            }
-
-            // Up/Down
-            if (client.options.jumpKey.isPressed()) {
-                newVelocity = addVec(newVelocity, playerManager.moveUp(flySpeed));
-            }
-            if (client.options.sneakKey.isPressed()) {
-                newVelocity = addVec(newVelocity, playerManager.moveDown(flySpeed));
-            }
-
-            // Move the player
-            playerManager.setVelocity(newVelocity);
-            newVelocity = Vec3d.ZERO;
-        }
-
-        // Start the timer for the second space bar hit if it was hit once
+        // Up/Down
         if (client.options.jumpKey.isPressed()) {
-            doubleSpaceTimer = 5;
+            newVelocity = addVectors(newVelocity, player.moveUp(flySpeed));
+        }
+        if (client.options.sneakKey.isPressed()) {
+            newVelocity = addVectors(newVelocity, player.moveDown(flySpeed));
         }
 
-        if (doubleSpaceTimer > -1) {
-            --doubleSpaceTimer;
-        }
-    }
-
-    private Vec3d addVec(Vec3d one, Vec3d two) {
-        return new Vec3d(one.x + two.x, one.y + two.y, one.z + two.z);
+        // Move the player
+        player.setVelocity(newVelocity);
+        newVelocity = Vec3d.ZERO;
     }
 }

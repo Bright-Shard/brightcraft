@@ -1,7 +1,7 @@
 package dev.brightshard.brightcraft.ui.widgets;
 
 import dev.brightshard.brightcraft.lib.Config;
-import dev.brightshard.brightcraft.lib.PlayerManager;
+import dev.brightshard.brightcraft.managers.PlayerManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;

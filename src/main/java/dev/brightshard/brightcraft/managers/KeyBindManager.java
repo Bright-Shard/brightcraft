@@ -1,5 +1,8 @@
-package dev.brightshard.brightcraft.lib;
+package dev.brightshard.brightcraft.managers;
 
+import dev.brightshard.brightcraft.Main;
+import dev.brightshard.brightcraft.lib.Config;
+import dev.brightshard.brightcraft.lib.Hack;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 
@@ -25,7 +28,7 @@ public class KeyBindManager {
     }
 
     public void tick() {
-        if (!PlayerManager.getInstance().ready()) {
+        if (!Main.getInstance().ready()) {
             return;
         }
         for (Hack hack : Hack.getHacks()) {
