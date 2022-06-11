@@ -1,16 +1,20 @@
 package dev.brightshard.brightcraft.hacks;
 
+import dev.brightshard.brightcraft.events.EventData;
+import dev.brightshard.brightcraft.events.EventHandler;
 import dev.brightshard.brightcraft.lib.Hack;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import org.lwjgl.glfw.GLFW;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class XRay extends Hack {
-    private boolean fullBrightWasOn;
+    private boolean fullBrightWasOff;
     private final Hack fullbright = Hack.getHackById("FullBright");
-    private final Block[] visibleBlocks = new Block[] {
+    public static final List<Block> visibleBlocks = Arrays.asList(
             // Iron
             Blocks.IRON_ORE,
             Blocks.DEEPSLATE_IRON_ORE,
@@ -52,38 +56,39 @@ public class XRay extends Hack {
             Blocks.END_PORTAL,
             Blocks.END_PORTAL_FRAME,
             Blocks.END_GATEWAY
-    };
+    );
 
     public XRay() {
         super("XRay", "XRay", "Only show important blocks (ores, monsters, lava, etc)\nAlso enables Fullbright", GLFW.GLFW_KEY_X);
+        XRay instance = this;
+        this.handlers.add(new EventHandler(instance.id, "BlockShouldRender") {
+            @Override
+            public <DataType, CIRType> void fire(EventData<DataType, CIRType> data) {
+                CallbackInfoReturnable<Boolean> cir = data.getCIR();
+                if (visibleBlocks.contains(data.<Block>getData())) {
+                    cir.setReturnValue(true);
+                } else {
+                    cir.setReturnValue(false);
+                }
+            }
+        });
     }
 
     @Override
     public void onEnable() {
-        fullBrightWasOn = this.fullbright.enabled();
+        super.onEnable();
+        this.fullBrightWasOff = !this.fullbright.enabled();
         this.fullbright.enable();
 
         client.worldRenderer.reload();
-
-        eventManager.bindEvent("BlockShouldRender", this.id, (cir, data) -> {
-            if (Arrays.asList(this.visibleBlocks).contains((Block) data)) {
-                cir.setReturnValue(true);
-            } else {
-                cir.setReturnValue(false);
-            }
-        });
     }
+
     @Override
     public void onDisable() {
-        if (!fullBrightWasOn) {
+        super.onDisable();
+        if (this.fullBrightWasOff) {
             this.fullbright.disable();
         }
-
         client.worldRenderer.reload();
-
-        eventManager.releaseEvent("BlockShouldRender", this.id);
-    }
-    @Override
-    public void tick() {
     }
 }

@@ -13,7 +13,6 @@ import static dev.brightshard.brightcraft.Main.LOGGER;
 public class Config {
     private final Properties config = new Properties();
     private static final Path configFile = FabricLoader.getInstance().getConfigDir().resolve("brightcraft.properties");
-    public double defaultGamma;
     private static final Config instance = new Config();
 
     public Config() {
@@ -50,6 +49,12 @@ public class Config {
         }
         return this.config.getProperty(id);
     }
+    public String getConfig(String id, String defaultValue) {
+        if (!this.config.containsKey(id)) {
+            this.setConfig(id, defaultValue);
+        }
+        return this.config.getProperty(id);
+    }
     public boolean toggleHack(String id) {
         Hack hack = Hack.getHackById(id);
         if (hack == null) {
@@ -72,9 +77,5 @@ public class Config {
             }
         }
         return enabled;
-    }
-
-    public void load() {
-        this.defaultGamma = PlayerManager.getInstance().getClient().options.gamma;
     }
 }

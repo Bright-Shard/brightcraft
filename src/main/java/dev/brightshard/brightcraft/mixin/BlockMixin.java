@@ -1,6 +1,7 @@
 package dev.brightshard.brightcraft.mixin;
 
-import dev.brightshard.brightcraft.managers.EventManager;
+import dev.brightshard.brightcraft.events.EventData;
+import dev.brightshard.brightcraft.events.EventManager;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -17,6 +18,6 @@ public class BlockMixin {
             "Lnet/minecraft/util/math/BlockPos;)Z", cancellable = true)
     private static void shouldDrawSide(BlockState state, BlockView view, BlockPos pos, Direction dir, BlockPos otherPos,
                                        CallbackInfoReturnable<Boolean> cir) {
-        EventManager.getInstance().fireEvent("BlockShouldRender", cir, state.getBlock());
+        EventManager.fireEvent("BlockShouldRender", new EventData<>(state.getBlock(), cir));
     }
 }

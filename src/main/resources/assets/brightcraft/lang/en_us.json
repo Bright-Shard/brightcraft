@@ -1,11 +1,13 @@
 {
   "category.brightcraft": "BrightCraft",
 
-  "brightcraft.keybinds.Fly": "Fly Hack",
+  "brightcraft.keybinds.UI": "Open UI",
+  "brightcraft.keybinds.Fly": "Fly",
   "brightcraft.keybinds.NoClip": "Noclip",
   "brightcraft.keybinds.NoFallDamage": "Block Fall Damage",
   "brightcraft.keybinds.FullBright": "FullBright",
   "brightcraft.keybinds.Instabreak": "Instant Mine",
-  "brightcraft.keybinds.UI": "Open UI",
-  "brightcraft.keybinds.XRay": "XRay"
+  "brightcraft.keybinds.XRay": "XRay",
+  "brightcraft.keybinds.Speed": "Speed",
+  "brightcraft.keybinds.Jetpack": "Jetpack"
 }

@@ -12,4 +12,8 @@ public class MathTools {
     public static Vec3d addVectors(Vec3d one, Vec3d two) {
         return new Vec3d(one.x + two.x, one.y + two.y, one.z + two.z);
     }
+
+    public static Vec3d multiplyVectors(Vec3d one, Vec3d two) {
+        return new Vec3d(one.x * two.x, one.y * two.y, one.z * two.z);
+    }
 }

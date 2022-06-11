@@ -1,20 +1,20 @@
 package dev.brightshard.brightcraft.lib;
 
 import dev.brightshard.brightcraft.Main;
-import dev.brightshard.brightcraft.managers.ClientPlayerEntityManager;
-import dev.brightshard.brightcraft.managers.EventManager;
+import dev.brightshard.brightcraft.events.EventHandler;
+import dev.brightshard.brightcraft.events.EventManager;
 import dev.brightshard.brightcraft.managers.PlayerManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 
 public abstract class Hack {
     protected static final Config config = Config.getInstance();
     protected static final Logger LOGGER = Main.LOGGER;
-    protected static final EventManager eventManager = EventManager.getInstance();
     protected static final PlayerManager player = PlayerManager.getInstance();
     protected static MinecraftClient client = player.getClient();
     protected static Hashtable<String, Hack> hacks = new Hashtable<>();
@@ -25,6 +25,7 @@ public abstract class Hack {
     public int cooldown;
     protected int key;
     public KeyBinding keybind;
+    protected final ArrayList<EventHandler> handlers = new ArrayList<>();
 
     public Hack(String id, String name, String tooltip, int key) {
         this.id = id; this.name = name; this.tooltip = tooltip; this.key = key;
@@ -40,25 +41,30 @@ public abstract class Hack {
         return config.getConfig(this.id).equals("true");
     }
     public void enable() {
-        boolean wasDisabled = !this.enabled();
-        config.setConfig(this.id, "true");
-        this.onEnable();
-        if (wasDisabled) {
+        if (!this.enabled()) {
+            config.setConfig(this.id, "true");
+            this.onEnable();
             new Chat(this);
         }
     }
     public void disable() {
-        boolean wasEnabled = this.enabled();
-        config.setConfig(this.id, "false");
-        this.onDisable();
-        if (wasEnabled) {
+        if (this.enabled()) {
+            config.setConfig(this.id, "false");
+            this.onDisable();
             new Chat(this);
         }
     }
 
-    public abstract void tick();
-    public abstract void onEnable();
-    public abstract void onDisable();
+    public void onEnable() {
+        for (EventHandler handler : this.handlers) {
+            EventManager.bindEvent(handler);
+        }
+    }
+    public void onDisable() {
+        for (EventHandler handler : this.handlers) {
+            EventManager.releaseEvent(handler);
+        }
+    }
 
     public static Collection<Hack> getHacks() {
         return hacks.values();
