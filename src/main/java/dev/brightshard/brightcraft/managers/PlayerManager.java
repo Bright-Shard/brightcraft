@@ -1,6 +1,5 @@
 package dev.brightshard.brightcraft.managers;
 
-import dev.brightshard.brightcraft.lib.Hack;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
@@ -8,7 +7,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.Objects;
+import static dev.brightshard.brightcraft.lib.MathTools.multiplyVectors;
 
 public class PlayerManager {
     private ClientPlayerEntityManager player = null;
@@ -28,21 +27,13 @@ public class PlayerManager {
     }
 
     public void tick(MinecraftClient client) {
-        if (client.player != null) {
-            if (client != this.client || client.player != this.playerEntity) {
-                this.client = client;
-                this.player = (ClientPlayerEntityManager) client.player;
-                this.playerEntity = this.player.getEntity();
-                this.interactionManager = (InteractionManager) client.interactionManager;
-            }
-            this.velocity = client.player.getVelocity();
-        }  else {
-            this.client = null;
-            this.player = null;
-            this.playerEntity = null;
-            this.interactionManager = null;
-            this.velocity = null;
+        if (client != this.client || client.player != this.playerEntity) {
+            this.client = client;
+            this.player = (ClientPlayerEntityManager) client.player;
+            this.playerEntity = this.player.getEntity();
+            this.interactionManager = (InteractionManager) client.interactionManager;
         }
+        this.velocity = client.player.getVelocity();
         this.blockMovement = false;
     }
 
@@ -80,7 +71,7 @@ public class PlayerManager {
 
     // VELOCITY --------------------------------------------------------------------------------------------------------
     public void setVelocity(Vec3d vel) {
-        if (this.blockMovement) {
+        if (this.blockMovement || this.playerEntity == null) {
             return;
         }
         if (this.up > 0) {
@@ -109,8 +100,16 @@ public class PlayerManager {
     public Vec3d moveForwards(double amount) {
         return this.getRot().multiply(amount);
     }
+    public Vec3d moveForwardsFlat(double amount) {
+        Vec3d moveAmount = this.getRot().multiply(amount);
+        return new Vec3d(moveAmount.x, 0, moveAmount.z);
+    }
     public Vec3d moveBackwards(double amount) {
         return this.getRot().negate().multiply(amount);
+    }
+    public Vec3d moveBackwardsFlat(double amount) {
+        Vec3d moveAmount = this.getRot().negate().multiply(amount);
+        return new Vec3d(moveAmount.x, 0, moveAmount.z);
     }
     public Vec3d moveLeft(double amount) {
         Vec3d moveAmount = this.getRot().rotateY((float) turnAngle).multiply(amount);

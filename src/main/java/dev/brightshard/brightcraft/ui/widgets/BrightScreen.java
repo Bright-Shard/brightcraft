@@ -33,8 +33,8 @@ public abstract class BrightScreen extends Screen {
         this.updateGrid();
     }
 
-    protected void addSlider(String text, double value, double min, double max, Slider.valueUpdateAction onValueUpdate, BrightScreen parent) {
-        this.addDrawableChild(new Slider(text, value, min, max, onValueUpdate, parent));
+    protected void addSlider(String text, double value, double min, double max, Slider.valueUpdateAction onValueUpdate) {
+        this.addDrawableChild(new Slider(text, value, min, max, onValueUpdate, this));
         this.column = 1;
         this.updateGrid();
     }

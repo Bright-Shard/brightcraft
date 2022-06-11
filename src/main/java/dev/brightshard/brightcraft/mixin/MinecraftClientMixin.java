@@ -1,6 +1,7 @@
 package dev.brightshard.brightcraft.mixin;
 
-import dev.brightshard.brightcraft.managers.EventManager;
+import dev.brightshard.brightcraft.events.EventData;
+import dev.brightshard.brightcraft.events.EventManager;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -12,6 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MinecraftClientMixin {
     @Inject(method = "isAmbientOcclusionEnabled()Z", at = @At(value = "HEAD"), cancellable = true)
     private static void disableAmbientOcclusion(CallbackInfoReturnable<Boolean> cir) {
-        EventManager.getInstance().fireEvent("AmbientOcclusion", cir, null);
+        EventManager.fireEvent("AmbientOcclusion", new EventData<>(cir));
     }
 }

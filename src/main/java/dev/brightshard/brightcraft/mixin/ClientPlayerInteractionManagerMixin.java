@@ -1,15 +1,11 @@
 package dev.brightshard.brightcraft.mixin;
 
-import dev.brightshard.brightcraft.lib.*;
-
-import dev.brightshard.brightcraft.managers.EventManager;
+import dev.brightshard.brightcraft.events.EventData;
+import dev.brightshard.brightcraft.events.EventManager;
 import dev.brightshard.brightcraft.managers.InteractionManager;
-import dev.brightshard.brightcraft.managers.PlayerManager;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,11 +32,11 @@ public abstract class ClientPlayerInteractionManagerMixin implements Interaction
     @Inject(method = "updateBlockBreakingProgress(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z",
     at = @At("HEAD"))
     private void updateBlockBreakingProgress(BlockPos pos, Direction dir, CallbackInfoReturnable<Boolean> cir) {
-        EventManager.getInstance().fireEvent("BlockBreaking", cir, new Object[]{pos, dir});
+        EventManager.fireEvent("BlockBreaking", new EventData<>(new Object[]{pos, dir}));
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
-        EventManager.getInstance().fireEvent("BreakingProgressChanged", null, null);
+        EventManager.fireEvent("BreakingProgressChanged");
     }
 }

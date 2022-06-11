@@ -28,19 +28,13 @@ public class SettingsMenu extends BrightScreen {
             });
         }
 
-        double flySpeed;
-        try {
-            flySpeed = Double.parseDouble(config.getConfig("FlySpeed"));
-        } catch (NumberFormatException e) {
-            flySpeed = 1;
-            config.setConfig("FlySpeed", String.valueOf(flySpeed));
-        }
-        LOGGER.info(String.valueOf(flySpeed));
+        double flySpeed = Double.parseDouble(config.getConfig("FlySpeed", "1.0"));
+        double speedHackSpeed = Double.parseDouble(config.getConfig("SpeedAmount", "10.0"));
 
-        this.addSlider("Fly Speed", flySpeed, 0.5, 5, (slider) -> {
-            double newFlySpeed = slider.getValue();
-            config.setConfig("FlySpeed", String.valueOf(newFlySpeed));
-        }, this);
+        this.addSlider("Fly Speed", flySpeed, 0.5, 5,
+                (slider) -> config.setConfig("FlySpeed", String.valueOf(slider.getValue())));
+        this.addSlider("Speed Hack Speed", speedHackSpeed, 1, 100,
+                (slider) -> config.setConfig("SpeedAmount", String.valueOf(slider.getValue())));
 
         this.addButton("AntiCheat Config", "Change settings to avoid anticheat", (btn) -> client.setScreen(AnticheatMenu.getInstance()), true);
     }

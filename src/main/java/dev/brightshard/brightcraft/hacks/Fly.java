@@ -1,5 +1,7 @@
 package dev.brightshard.brightcraft.hacks;
 
+import dev.brightshard.brightcraft.events.EventData;
+import dev.brightshard.brightcraft.events.EventHandler;
 import dev.brightshard.brightcraft.lib.Hack;
 import net.minecraft.util.math.Vec3d;
 
@@ -10,34 +12,37 @@ import java.util.Objects;
 import static dev.brightshard.brightcraft.lib.MathTools.addVectors;
 
 public class Fly extends Hack {
-    private Vec3d newVelocity = new Vec3d(0, 0, 0);
 
     public Fly() {
         super("Fly", "Fly", "Fly hacks\nRecommendation: Enable \"No Fall Damage\", too!", GLFW.GLFW_KEY_Z);
+        Fly instance = this;
+        this.handlers.add(new EventHandler(instance.id, "tick") {
+            @Override
+            public <DataType, CIRType> void fire(EventData<DataType, CIRType> data) {
+                instance.tick();
+            }
+        });
     }
 
     @Override
     public void onEnable() {
         Hack.getHackById("Jetpack").disable();
+        super.onEnable();
         player.flying(true);
-    }
-    @Override
-    public void onDisable() {
-        Objects.requireNonNull(Hack.getHackById("NoClip")).disable();
-        player.flying(false);
     }
 
     @Override
-    public void tick() {
+    public void onDisable() {
+        Objects.requireNonNull(Hack.getHackById("NoClip")).disable();
+        super.onDisable();
+        player.flying(false);
+    }
+
+    private void tick() {
         // Update FlySpeed in case it was changed
-        double flySpeed;
-        try {
-            flySpeed = Double.parseDouble(config.getConfig("FlySpeed"));
-        // Default to 1.0 if there's no configuration for it (i.e. the config file was deleted or doesn't exist)
-        } catch (NumberFormatException e) {
-            flySpeed = 1.0;
-            config.setConfig("FlySpeed", "1.0");
-        }
+        double flySpeed = Double.parseDouble(config.getConfig("FlySpeed", "1.0"));
+        // Reset player velocity
+        Vec3d newVelocity = Vec3d.ZERO;
 
         // Strafe controls
         if (client.options.forwardKey.isPressed()) {
@@ -63,6 +68,5 @@ public class Fly extends Hack {
 
         // Move the player
         player.setVelocity(newVelocity);
-        newVelocity = Vec3d.ZERO;
     }
 }
