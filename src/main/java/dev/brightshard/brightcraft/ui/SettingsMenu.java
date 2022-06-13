@@ -23,7 +23,6 @@ public class SettingsMenu extends BrightScreen {
                 boolean enabled = config.toggleHack(hack.id);
                 btn.setMessage(Text.of(hack.name + ": " + (enabled ? "On" : "Off")));
 
-                assert client != null;
                 this.refresh();
             });
         }
@@ -33,10 +32,11 @@ public class SettingsMenu extends BrightScreen {
 
         this.addSlider("Fly Speed", flySpeed, 0.5, 5,
                 (slider) -> config.setConfig("FlySpeed", String.valueOf(slider.getValue())));
-        this.addSlider("Speed Hack Speed", speedHackSpeed, 1, 100,
+        this.addSlider("Speed Hack Speed", speedHackSpeed, 0.5, 5,
                 (slider) -> config.setConfig("SpeedAmount", String.valueOf(slider.getValue())));
 
-        this.addButton("AntiCheat Config", "Change settings to avoid anticheat", (btn) -> client.setScreen(AnticheatMenu.getInstance()), true);
+        this.addButton("AntiCheat Config", "Change settings to avoid anticheat", (btn) -> client.setScreen(AnticheatMenu.getInstance()), false);
+        this.addButton("XRay Config", "Change what blocks are shown with XRay", (btn) -> client.setScreen(XRayMenu.getInstance()), false);
     }
 
     private void addButton (Hack hack, ButtonWidget.PressAction func) {

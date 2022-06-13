@@ -41,32 +41,27 @@ public class Fly extends Hack {
     private void tick() {
         // Update FlySpeed in case it was changed
         double flySpeed = Double.parseDouble(config.getConfig("FlySpeed", "1.0"));
-        // Reset player velocity
-        Vec3d newVelocity = Vec3d.ZERO;
 
         // Strafe controls
         if (client.options.forwardKey.isPressed()) {
-            newVelocity = addVectors(newVelocity, player.moveForwards(flySpeed));
+            player.moveForwards(flySpeed);
         }
         if (client.options.backKey.isPressed()) {
-            newVelocity = addVectors(newVelocity, player.moveBackwards(flySpeed));
+            player.moveBackwards(flySpeed);
         }
         if (client.options.leftKey.isPressed()) {
-            newVelocity = addVectors(newVelocity, player.moveLeft(flySpeed));
+            player.moveLeft(flySpeed);
         }
         if (client.options.rightKey.isPressed()) {
-            newVelocity = addVectors(newVelocity, player.moveRight(flySpeed));
+            player.moveRight(flySpeed);
         }
 
         // Up/Down
         if (client.options.jumpKey.isPressed()) {
-            newVelocity = addVectors(newVelocity, player.moveUp(flySpeed));
+            player.moveUp(flySpeed);
         }
         if (client.options.sneakKey.isPressed()) {
-            newVelocity = addVectors(newVelocity, player.moveDown(flySpeed));
+            player.moveDown(flySpeed);
         }
-
-        // Move the player
-        player.setVelocity(newVelocity);
     }
 }

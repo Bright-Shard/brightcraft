@@ -15,8 +15,10 @@ import java.util.Hashtable;
 public abstract class Hack {
     protected static final Config config = Config.getInstance();
     protected static final Logger LOGGER = Main.LOGGER;
-    protected static final PlayerManager player = PlayerManager.getInstance();
-    protected static MinecraftClient client = player.getClient();
+
+    protected static final Main main = Main.getInstance();
+    protected static PlayerManager player = main.getPlayer();
+    protected static MinecraftClient client = main.getClient();
     protected static Hashtable<String, Hack> hacks = new Hashtable<>();
 
     public String id;
@@ -76,7 +78,9 @@ public abstract class Hack {
         return hacks.get(id);
     }
     public static void reloadHacks() {
-        client = player.getClient();
+        player = main.getPlayer();
+        client = main.getClient();
+
         for (Hack hack : hacks.values()) {
             if (hack.enabled()) {
                 hack.onEnable();

@@ -21,9 +21,9 @@ public class NoFallDamage extends Hack {
     }
 
     private void tick() {
-        Vec3d velocity = player.getVelocity();
+        Vec3d velocity = player.getVel();
         // Just flying downwards, and not quickly enough to take damage
-        if (player.flying() && player.getPlayerEntity().isSneaking() && velocity.y > -0.5) {
+        if (player.flying() && player.sneaking() && velocity.y > -0.5) {
             return;
         }
         player.setFallDistance(0);

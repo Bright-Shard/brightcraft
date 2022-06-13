@@ -35,16 +35,16 @@ public class Jetpack extends Hack {
 
     private void tick() {
         // Reset newVelocity
-        Vec3d velocity = player.getVelocity();
+        Vec3d velocity = player.getVel();
         // Update FlySpeed in case it was changed
         double flySpeed = Double.parseDouble(config.getConfig("FlySpeed", "1.0"));
 
         // Better air strafing
-        player.getPlayerEntity().airStrafingSpeed = (float) flySpeed / 12;
+        player.setAirStrafingSpeed((float) flySpeed / 12);
 
         // Jump for jetpack
         if (client.options.jumpKey.isPressed()) {
-            player.setVelocity(new Vec3d(velocity.x, flySpeed, velocity.z));
+            player.setVel(new Vec3d(velocity.x, flySpeed, velocity.z));
         }
     }
 }

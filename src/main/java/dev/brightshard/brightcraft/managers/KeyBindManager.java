@@ -43,7 +43,7 @@ public class KeyBindManager {
             }
         }
         if (UIKeybind.isPressed()) {
-            PlayerManager.getInstance().getClient().setScreen(SettingsMenu.getInstance());
+            Main.getInstance().getClient().setScreen(SettingsMenu.getInstance());
         }
     }
 

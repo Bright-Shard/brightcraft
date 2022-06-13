@@ -12,6 +12,6 @@ import dev.brightshard.brightcraft.Main;
 public class ClientPlayerNetworkHandlerMixin {
     @Inject(method = "onGameJoin", at = @At("TAIL"))
     private void onGameJoin(GameJoinS2CPacket par1, CallbackInfo ci) {
-        Main.getInstance().onWorldJoin();
+        Main.getInstance().worldJoined = true;
     }
 }

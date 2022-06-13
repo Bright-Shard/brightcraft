@@ -15,7 +15,7 @@ public class NoClip extends Hack {
         this.handlers.add(new EventHandler(instance.id, "tick") {
             @Override
             public <DataType, CIRType> void fire(EventData<DataType, CIRType> data) {
-                player.setNoClip(true);
+                player.noclip(true);
             }
         });
     }

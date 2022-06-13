@@ -1,7 +1,8 @@
 package dev.brightshard.brightcraft.lib;
 
-import dev.brightshard.brightcraft.managers.PlayerManager;
-import net.minecraft.text.Text;
+import dev.brightshard.brightcraft.Main;
+
+import static dev.brightshard.brightcraft.Main.LOGGER;
 
 public class Chat {
     private String longMessage = "";
@@ -12,7 +13,7 @@ public class Chat {
 
     public Chat() {}
     public Chat(String text) {
-        PlayerManager.getInstance().localChat(label + text);
+        Main.getInstance().getPlayer().hiddenChat(label + text);
     }
 
     public Chat(Hack hack) {
@@ -26,7 +27,8 @@ public class Chat {
         this.longMessage = "";
     }
     public void send() {
-        PlayerManager.getInstance().localChat(this.longMessage);
+        LOGGER.info("Sending message: "+this.longMessage);
+        Main.getInstance().getPlayer().hiddenChat(this.longMessage);
         this.clear();
     }
 }
