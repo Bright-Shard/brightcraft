@@ -32,8 +32,10 @@ on public servers. If you disregard that and get banned, **it's your fault, not 
 - FastBreak
 - FullBright
 - XRay (Currently incompatible with shader mods, like Iris or Optifine/Optifabric)
+- Speed
 
 ## Other Features
+- Configurable XRay blocks
 - GUI to customize/toggle cheats (Open from in-game settings or by pressing RSHIFT)
 - Keybinds to toggle cheats (Change from the in-game controls settings)
 - When cheats are toggled, BrightCraft notifies you in-chat (Of course, only you can see that chat)
