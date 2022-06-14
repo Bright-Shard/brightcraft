@@ -82,12 +82,12 @@ public abstract class ClientPlayerEntityMixin implements PlayerManager {
     @Override
     public void moveLeft(double amount) {
         Vec3d vel = this.getRot().rotateY((float) Math.toRadians(90)).multiply(amount);
-        this.velocity = new Vec3d(vel.x, this.getVel().y, vel.z);
+        this.velocity = new Vec3d(vel.x, this.velocity.y, vel.z);
     }
     @Override
     public void moveRight(double amount) {
         Vec3d vel = this.getRot().rotateY((float) Math.toRadians(-90)).multiply(amount);
-        this.velocity = new Vec3d(vel.x, this.getVel().y, vel.z);
+        this.velocity = new Vec3d(vel.x, this.velocity.y, vel.z);
     }
     @Override
     public void moveForwardsFlat(double amount) {

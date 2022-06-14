@@ -9,8 +9,8 @@
     "BrightShard"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://brightshard.dev/",
+    "sources": "https://github.com/Bright-Shard/BrightCraft"
   },
 
   "license": "CC0-1.0",
@@ -32,7 +32,5 @@
     "minecraft": "~1.19",
     "java": ">=17"
   },
-  "suggests": {
-    "another-mod": "*"
-  }
+  "suggests": {}
 }
