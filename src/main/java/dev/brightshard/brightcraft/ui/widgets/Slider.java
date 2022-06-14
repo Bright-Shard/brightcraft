@@ -4,8 +4,6 @@ import dev.brightshard.brightcraft.lib.MathTools;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.text.Text;
 
-import static dev.brightshard.brightcraft.Main.LOGGER;
-
 public class Slider extends SliderWidget {
     private final valueUpdateAction onValueUpdate;
     private double mappedValue;
@@ -40,7 +38,6 @@ public class Slider extends SliderWidget {
     @Override
     protected void applyValue() {
         this.mappedValue = MathTools.map(this.value, 0, 1, this.min, this.max);
-        LOGGER.info(String.valueOf(this.mappedValue));
         this.onValueUpdate.onValueUpdate(this);
     }
 }

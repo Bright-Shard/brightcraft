@@ -25,16 +25,16 @@ public class Speed extends Hack {
         double speed = Double.parseDouble(config.getConfig("SpeedAmount", "1.0"));
 
         // Strafe controls
-        if (client.options.forwardKey.isPressed()) {
+        if (options.forwardKey.isPressed()) {
             player.moveForwardsFlat(speed);
         }
-        if (client.options.backKey.isPressed()) {
+        if (options.backKey.isPressed()) {
             player.moveBackwardsFlat(speed);
         }
-        if (client.options.leftKey.isPressed()) {
+        if (options.leftKey.isPressed()) {
             player.moveLeft(speed);
         }
-        if (client.options.rightKey.isPressed()) {
+        if (options.rightKey.isPressed()) {
             player.moveRight(speed);
         }
     }

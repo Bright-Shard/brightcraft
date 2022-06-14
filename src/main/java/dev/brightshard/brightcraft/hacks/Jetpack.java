@@ -43,7 +43,7 @@ public class Jetpack extends Hack {
         player.setAirStrafingSpeed((float) flySpeed / 12);
 
         // Jump for jetpack
-        if (client.options.jumpKey.isPressed()) {
+        if (options.jumpKey.isPressed()) {
             player.setVel(new Vec3d(velocity.x, flySpeed, velocity.z));
         }
     }

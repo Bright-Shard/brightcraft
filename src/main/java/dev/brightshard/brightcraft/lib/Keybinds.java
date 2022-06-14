@@ -1,8 +1,6 @@
-package dev.brightshard.brightcraft.managers;
+package dev.brightshard.brightcraft.lib;
 
 import dev.brightshard.brightcraft.Main;
-import dev.brightshard.brightcraft.lib.Config;
-import dev.brightshard.brightcraft.lib.Hack;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 
@@ -10,10 +8,10 @@ import static dev.brightshard.brightcraft.Main.LOGGER;
 import dev.brightshard.brightcraft.ui.SettingsMenu;
 import org.lwjgl.glfw.GLFW;
 
-public class KeyBindManager {
+public class Keybinds {
     private final Config config = Config.getInstance();
     private KeyBinding UIKeybind;
-    private static final KeyBindManager instance = new KeyBindManager();
+    private static final Keybinds instance = new Keybinds();
 
     public void registerKeyBinds() {
         for (Hack hack : Hack.getHacks()) {
@@ -47,7 +45,7 @@ public class KeyBindManager {
         }
     }
 
-    public static KeyBindManager getInstance() {
+    public static Keybinds getInstance() {
         return instance;
     }
 }

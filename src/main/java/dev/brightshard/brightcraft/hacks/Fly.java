@@ -28,14 +28,12 @@ public class Fly extends Hack {
     public void onEnable() {
         Hack.getHackById("Jetpack").disable();
         super.onEnable();
-        player.flying(true);
     }
 
     @Override
     public void onDisable() {
         Objects.requireNonNull(Hack.getHackById("NoClip")).disable();
         super.onDisable();
-        player.flying(false);
     }
 
     private void tick() {
@@ -43,24 +41,24 @@ public class Fly extends Hack {
         double flySpeed = Double.parseDouble(config.getConfig("FlySpeed", "1.0"));
 
         // Strafe controls
-        if (client.options.forwardKey.isPressed()) {
+        if (options.forwardKey.isPressed()) {
             player.moveForwards(flySpeed);
         }
-        if (client.options.backKey.isPressed()) {
+        if (options.backKey.isPressed()) {
             player.moveBackwards(flySpeed);
         }
-        if (client.options.leftKey.isPressed()) {
+        if (options.leftKey.isPressed()) {
             player.moveLeft(flySpeed);
         }
-        if (client.options.rightKey.isPressed()) {
+        if (options.rightKey.isPressed()) {
             player.moveRight(flySpeed);
         }
 
         // Up/Down
-        if (client.options.jumpKey.isPressed()) {
+        if (options.jumpKey.isPressed()) {
             player.moveUp(flySpeed);
         }
-        if (client.options.sneakKey.isPressed()) {
+        if (options.sneakKey.isPressed()) {
             player.moveDown(flySpeed);
         }
     }

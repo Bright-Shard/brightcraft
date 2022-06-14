@@ -6,7 +6,6 @@ import dev.brightshard.brightcraft.events.EventManager;
 import org.lwjgl.glfw.GLFW;
 
 import dev.brightshard.brightcraft.lib.Hack;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 // Thx Wurst Client
@@ -37,7 +36,7 @@ public class Fullbright extends Hack {
 
     @Override
     public void onEnable() {
-        this.defaultGamma = client.options.gamma;
+        this.defaultGamma = options.getGamma();
         super.onEnable();
 
         // Smoothly brighten the screen
@@ -45,8 +44,9 @@ public class Fullbright extends Hack {
         EventManager.bindEvent(new EventHandler(instance.id, "tick") {
             @Override
             public <DataType, CIRType> void fire(EventData<DataType, CIRType> data) {
-                if (client.options.gamma < 16) {
-                    client.options.gamma += 0.5;
+                double currentGamma = options.getGamma();
+                if (currentGamma < 16) {
+                    options.setGamma(currentGamma + 0.5);
                 } else {
                     EventManager.releaseEvent(this);
                 }
@@ -63,8 +63,8 @@ public class Fullbright extends Hack {
         EventManager.bindEvent(new EventHandler(instance.id, "tick") {
             @Override
             public <DataType, CIRType> void fire(EventData<DataType, CIRType> data) {
-                if (client.options.gamma > instance.defaultGamma) {
-                    client.options.gamma -= 1;
+                if (options.getGamma() > instance.defaultGamma) {
+                    options.setGamma(options.getGamma() - 0.5);
                 } else {
                     EventManager.releaseEvent(this);
                 }

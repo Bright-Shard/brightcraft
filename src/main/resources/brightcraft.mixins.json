@@ -9,8 +9,10 @@
     "ClientPlayerInteractionManagerMixin",
     "ClientPlayerNetworkHandlerMixin",
     "ClientWorldMixin",
+    "GameOptionsMixin",
     "MinecraftClientMixin",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "SimpleOptionMixin"
   ],
   "client": [
     "GameMenuScreenMixin"

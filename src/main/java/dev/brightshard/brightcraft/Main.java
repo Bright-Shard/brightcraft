@@ -2,7 +2,8 @@ package dev.brightshard.brightcraft;
 
 import dev.brightshard.brightcraft.hacks.*;
 import dev.brightshard.brightcraft.events.EventManager;
-import dev.brightshard.brightcraft.managers.KeyBindManager;
+import dev.brightshard.brightcraft.managers.ClientManager;
+import dev.brightshard.brightcraft.lib.Keybinds;
 import dev.brightshard.brightcraft.managers.PlayerManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -23,7 +24,7 @@ public class Main implements ClientModInitializer {
 
 	// Useful services
 	public static final Logger LOGGER = LoggerFactory.getLogger("BrightCraft");
-	private final KeyBindManager keyBindManager = KeyBindManager.getInstance();
+	private final Keybinds keybinds = Keybinds.getInstance();
 	private final Chat chat = new Chat();
 	public boolean worldJoined;
 	private boolean ready;
@@ -48,7 +49,7 @@ public class Main implements ClientModInitializer {
 			new NoClip();
 			new Speed();
 			LOGGER.info("Registering BrightCraft keybinds...");
-			keyBindManager.registerKeyBinds();
+			keybinds.registerKeyBinds();
 		} else {
 			throw new RuntimeException("BrightCraft initialized twice");
 		}
@@ -65,8 +66,10 @@ public class Main implements ClientModInitializer {
 			this.onWorldJoin(client);
 		} else if (!this.ready) return;
 
+		Hack.reloadHacks(); // Update client/player for hacks in case the player died
+
 		antikick();
-		keyBindManager.tick();
+		keybinds.tick();
 		EventManager.fireEvent("tick");
 		this.getPlayer().movePlayer();
 	}
@@ -76,7 +79,7 @@ public class Main implements ClientModInitializer {
 		Vec3d velocity = this.getPlayer().getVel();
 
 		// Only run when the player is fly hacking and not already falling
-		if (!this.getPlayer().flying() || velocity.y >= -fallDistance) {
+		if (!this.getPlayer().flying() || velocity.y <= -fallDistance) {
 			tickCounter = 40;
 			return;
 		}
@@ -106,6 +109,7 @@ public class Main implements ClientModInitializer {
 		LOGGER.info("World joined");
 
 		Hack.reloadHacks();
+		Hack.enableHacks();
 
 		// Chat hack statuses
 		chat.clear();
@@ -133,8 +137,8 @@ public class Main implements ClientModInitializer {
 	public PlayerManager getPlayer() {
 		return (PlayerManager) MinecraftClient.getInstance().player;
 	}
-	public MinecraftClient getClient() {
-		return MinecraftClient.getInstance();
+	public ClientManager getClient() {
+		return (ClientManager) MinecraftClient.getInstance();
 	}
 
 	public static Main getInstance() {

@@ -3,8 +3,9 @@ package dev.brightshard.brightcraft.lib;
 import dev.brightshard.brightcraft.Main;
 import dev.brightshard.brightcraft.events.EventHandler;
 import dev.brightshard.brightcraft.events.EventManager;
+import dev.brightshard.brightcraft.managers.ClientManager;
+import dev.brightshard.brightcraft.managers.GameOptionsManager;
 import dev.brightshard.brightcraft.managers.PlayerManager;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import org.slf4j.Logger;
 
@@ -18,7 +19,8 @@ public abstract class Hack {
 
     protected static final Main main = Main.getInstance();
     protected static PlayerManager player = main.getPlayer();
-    protected static MinecraftClient client = main.getClient();
+    protected static ClientManager client = main.getClient();
+    protected static GameOptionsManager options = client.getOptions();
     protected static Hashtable<String, Hack> hacks = new Hashtable<>();
 
     public String id;
@@ -28,11 +30,20 @@ public abstract class Hack {
     protected int key;
     public KeyBinding keybind;
     protected final ArrayList<EventHandler> handlers = new ArrayList<>();
+    static class EmptyHackClass extends Hack {
+        public EmptyHackClass() {
+            super();
+        }
+    }
 
     public Hack(String id, String name, String tooltip, int key) {
         this.id = id; this.name = name; this.tooltip = tooltip; this.key = key;
         this.keybind = new KeyBinding("brightcraft.keybinds."+id, key, "category.brightcraft");
         hacks.put(id, this);
+    }
+    public Hack() {
+        this.id = "empty";
+        this.name = "empty";
     }
 
     public void startCooldown() {
@@ -71,16 +82,23 @@ public abstract class Hack {
     public static Collection<Hack> getHacks() {
         return hacks.values();
     }
+    public static PlayerManager getPlayer() {
+        return player;
+    }
     public static Hack getHackById(String id) {
         if (hacks == null) {
-            return null;
+            return new EmptyHackClass();
         }
-        return hacks.get(id);
+        Hack hack = hacks.get(id);
+        return (hack != null ? hack : new EmptyHackClass());
     }
     public static void reloadHacks() {
         player = main.getPlayer();
         client = main.getClient();
+        options = client.getOptions();
+    }
 
+    public static void enableHacks() {
         for (Hack hack : hacks.values()) {
             if (hack.enabled()) {
                 hack.onEnable();

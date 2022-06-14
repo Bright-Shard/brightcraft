@@ -5,13 +5,9 @@ import dev.brightshard.brightcraft.events.EventHandler;
 import dev.brightshard.brightcraft.lib.Hack;
 import dev.brightshard.brightcraft.lib.XRayBlockGroup;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import org.lwjgl.glfw.GLFW;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
 
 public class XRay extends Hack {
     private boolean fullBrightWasOff;

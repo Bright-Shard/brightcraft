@@ -55,8 +55,10 @@ public class Config {
                     Blocks.REDSTONE_ORE,
                     Blocks.DEEPSLATE_REDSTONE_ORE,
                     Blocks.REDSTONE_BLOCK,
+                    // Quarrz
+                    Blocks.NETHER_QUARTZ_ORE,
             }),
-            new XRayBlockGroup("Biomes/Structures", "Blocks useful for finding certain biomes and structures", new Block[]{
+            new XRayBlockGroup("Structures", "Blocks useful for finding certain biomes and structures", new Block[]{
                     // Spawners
                     Blocks.CHEST,
                     Blocks.SPAWNER,
@@ -175,6 +177,8 @@ public class Config {
                     // Slime/honey
                     Blocks.SLIME_BLOCK,
                     Blocks.HONEY_BLOCK,
+                    // idek anymore
+                    Blocks.HOPPER,
             })
     };
 
@@ -220,7 +224,7 @@ public class Config {
     }
     public boolean toggleHack(String id) {
         Hack hack = Hack.getHackById(id);
-        if (hack == null) {
+        if (hack.getClass() == Hack.EmptyHackClass.class) {
             return false;
         }
         boolean wasEnabled = hack.enabled();

@@ -7,47 +7,80 @@ you're looking for - it's a little long, lol.
 # The Main Files
 - [`/Main`](src/main/java/dev/brightshard/brightcraft/Main.java): The core of BrightCraft. It's the main file, hence the name (woah, really??? O.o). It also bypasses the "
 <player> kicked for floating too long" by moving the player down every 40 ticks.
-- [`/InitHacks`](src/main/java/dev/brightshard/brightcraft/InitHacks.java): This initiates all the hacks in BrightCraft, ensuring that only one of each is started and that
-  all of them actually get started.
-- [`/hacks`](src/main/java/dev/brightshard/brightcraft/hacks): All of the cheats. They all extend the `Hack` class in `/lib`. I'm not going to bother listing the files,
-because the names are pretty self-explanatory.
 
 
 
-# BrightCraft's Tools/Wrappers
-- [`/lib`](src/main/java/dev/brightshard/brightcraft/lib): Resources for BrightCraft.
-    - `/lib/Chat`: Tool for sending chat messages (to the player, not everyone on the server)
-    - `/lib/Config`: This manages configuration (e.g. what cheats are enabled) and saves them to a config file.
-    - `/lib/KeyBindManager`: A class for registering all of BrightCraft's keybinds, and checking if they were pressed
-      once per tick.
-    - `/lib/MathTools`: Math tools. Currently, it only has a `map` function that I use with Minecraft's slider widget.
-    - `/lib/PlayerManager`: Pretty much core to BrightCraft - this handles moving the player and the player's various
-      properties.
+# BrightCraft's Events
+- [`/events/`](src/main/java/dev/brightshard/brightcraft/events): BrightCraft uses an event system for its cheats. For
+example, the XRay cheat has an event that is triggered every time a block should be rendered; then, if it is enabled,
+the XRay cheat will handle that event and only render a block if it's selected in one of the XRay groups.
+  - `EventData`: A class for sharing data between event triggers and the event handlers.
+  - `EventHandler`: A class for code that handles events when they're triggered.
+  - `EventManager`: The manager for binding and triggering events.
+
+
+
+# BrightCraft's Cheats
+- [`/hacks/`](src/main/java/dev/brightshard/brightcraft/hacks): Where all of the cheats are stored.
+  - `Fly`: The fly cheat.
+  - `Fullbright`: The fullbright cheat.
+  - `Instabreak`: The instant mine cheat.
+  - `Jetpack`: The jetpack cheat.
+  - `NoClip`: The noclip cheat.
+  - `NoFallDamage`: The cheat that blocks fall damage.
+  - `Speed`: The speed cheat.
+  - `XRay`: The xray cheat.
+
+
+
+# BrightCraft's Libraries
+- [`/lib/`](src/main/java/dev/brightshard/brightcraft/lib): Libraries for BrightCraft. These just save me time while
+programming.
+    - `Chat`: Tool for sending chat messages (to the player, not everyone on the server)
+    - `Config`: This manages configuration (e.g. what cheats are enabled) and saves them to a config file.
+    - `Hack`: The core Hack class that all the cheats extend.
+    - `MathTools`: Useful math functions.
+    - `XRayBlockGroup`: A class for storing a group of blocks in a group - e.g. all ore blocks in the ore group.
+    - `Keybinds`: Manages keybinds.
+
+
+
+# BrightCraft's Managers
+- [`/managers/`](src/main/java/dev/brightshard/brightcraft/managers): These each manage specific parts of BrightCraft.
+They're almost all interfaces that are then implemented by the mixins so that the changes apply directly to Minecraft.
+  - `ClientManager`: Makes parts of the client easier to modify.
+  - `GameOptionsManager`: Makes the gamma option modifiable.
+  - `InteractionManager`: Makes it easier to send action packets.
+  - `PlayerManager`: Heavily modifies to player, to add functions for moving it and changing its properties.
 
 
 
 # BrightCraft's Mixins
-- [`/mixin`](src/main/java/dev/brightshard/brightcraft/mixin): All of the mixins in BrightCraft. Each file is named `<class_that_it_injects_into>Mixin`.
-    - `/mixin/BlockMixin`: (When XRay is on) Makes XRay work by setting `shouldDrawSide` to false for blocks that
+- [`/mixin`](src/main/java/dev/brightshard/brightcraft/mixin): All of the mixins in BrightCraft. These mostly trigger
+events for the cheats to handle.
+    - `BlockMixin`: (When XRay is on) Makes XRay work by setting `shouldDrawSide` to false for blocks that
       shouldn't be visible (e.g. dirt and stone).
-    - `/mixin/ClientPlayerInteractionManagerMixin`: Used for the InstantBreak hack. Also has a stupidly long name.
-    - `/mixin/ClientPlayerNetworkHandlerMixin`: Makes the message showing what cheats are enabled send when the
-      player joins a world.
-    - `/mixin/GameMenuScreenMixin`: Adds BrightCraft's settings button the game's menu screen.
-    - `/mixin/GameRendererMixin`: Grants nightvision when FullBright is on.
-    - `/mixin/MinecraftClienMixin`: Turns off Ambient Occlusion when XRay is on (Otherwise shadows get shown on the ore
-      blocks, so the player can't see them even with FullBright).
-    - `/mixin/PlayerEntityMixin`: Turns on NoClip for the player.
+    - `ClientPlayerEntityMixin`: Implements the PlayerManager interface.
+    - `ClientPlayerInteractionManagerMixin`: Implements the InteractionManager interface.
+    - `ClientPlayerNetworkHandlerMixin`: Tells BrightCraft when the player joins a world.
+    - `ClientWorldMixin`: Tells BrightCraft when the player leaves a world.
+    - `GameMenuScreenMixin`: Adds BrightCraft's settings button the game's menu screen.
+    - `GameOptionsMixin`: Implements the GameOptionsManager interface.
+    - `MinecraftClientMixin`: Implements the ClientManager interface and disables ambient occlusion when XRay is on.
+    - `PlayerEntityMixin`: Implements the PlayerManager interface.
+    - `SimpleOptionMixin`: Allows SimpleOptions in Minecraft to be turned up past their max value (like Gamma past 1
+  for Fullbright to work).
 
 
 
 # BrightCraft's UI
-- [`/ui`](src/main/java/dev/brightshard/brightcraft/ui): The UI for BrightCraft.
-    - `/ui/widgets`: The widgets for BrightCraft's screens.
-        - `/ui/widgets/BrightScreen`: A wrapper for Minecraft's `Screen` class, with additional features I needed.
-        - `/ui/widgets/Button`: A wrapper for adding buttons to a `BrightScreen`. It calculates the size and placement
+- [`/ui/`](src/main/java/dev/brightshard/brightcraft/ui): The UI for BrightCraft.
+    - `/ui/widgets/`: The widgets for BrightCraft's screens.
+        - `BrightScreen`: A wrapper for Minecraft's `Screen` class, with additional features I needed.
+        - `Button`: A wrapper for adding buttons to a `BrightScreen`. It calculates the size and placement
           for the widget automagically.
-        - `/ui/widgets/Slider`: Basically the same thing as above, but for adding sliders. It automatically maps the
+        - `Slider`: Basically the same thing as above, but for adding sliders. It automatically maps the
           slider's value to the min/max value you provide.
-    - `/ui/AnticheatMenu`: A few (actually 1 lol) (VERY BASIC) anticheat bypasses.
-    - `/ui/SettingsMenu`: BrightCraft's settings.
+    - `AnticheatMenu`: A few (actually 1 lol) (VERY BASIC) anticheat bypasses.
+    - `SettingsMenu`: BrightCraft's settings.
+    - `XRayMenu`: For changing what XRay block groups will be visible when XRay is on.

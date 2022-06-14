@@ -30,7 +30,9 @@ public class EventData<DataType, CIRType> {
 
     public <Type> Type getData() {
         try {
-            return (Type) this.data;
+            @SuppressWarnings("unchecked")
+            Type returnData = (Type) this.data;
+            return returnData;
         } catch (ClassCastException e) {
             LOGGER.error("Error converting event data type!" + this.data + this.ci + this.cir + e);
             throw new RuntimeException("Error converting event data type: "+e);
@@ -38,7 +40,9 @@ public class EventData<DataType, CIRType> {
     }
     public <Type> CallbackInfoReturnable<Type> getCIR() {
         try {
-            return (CallbackInfoReturnable<Type>) this.cir;
+            @SuppressWarnings("unchecked")
+            CallbackInfoReturnable<Type> returnData = (CallbackInfoReturnable<Type>) this.cir;
+            return returnData;
         } catch (ClassCastException e) {
             LOGGER.error("Error converting event CIR type!" + this.data + this.ci + this.cir + e);
             throw new RuntimeException("Error converting event CIR type: "+e);

@@ -30,9 +30,9 @@ public class SettingsMenu extends BrightScreen {
         double flySpeed = Double.parseDouble(config.getConfig("FlySpeed", "1.0"));
         double speedHackSpeed = Double.parseDouble(config.getConfig("SpeedAmount", "10.0"));
 
-        this.addSlider("Fly Speed", flySpeed, 0.5, 5,
+        this.addSlider("Fly Speed", flySpeed, 0.2, 2,
                 (slider) -> config.setConfig("FlySpeed", String.valueOf(slider.getValue())));
-        this.addSlider("Speed Hack Speed", speedHackSpeed, 0.5, 5,
+        this.addSlider("Speed Hack Speed", speedHackSpeed, 0.2, 2,
                 (slider) -> config.setConfig("SpeedAmount", String.valueOf(slider.getValue())));
 
         this.addButton("AntiCheat Config", "Change settings to avoid anticheat", (btn) -> client.setScreen(AnticheatMenu.getInstance()), false);

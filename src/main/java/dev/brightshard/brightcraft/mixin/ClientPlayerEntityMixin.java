@@ -1,6 +1,7 @@
 package dev.brightshard.brightcraft.mixin;
 
 import dev.brightshard.brightcraft.events.EventData;
+import dev.brightshard.brightcraft.lib.Hack;
 import dev.brightshard.brightcraft.lib.MathTools;
 import dev.brightshard.brightcraft.managers.InteractionManager;
 import dev.brightshard.brightcraft.managers.PlayerManager;
@@ -30,10 +31,10 @@ public abstract class ClientPlayerEntityMixin implements PlayerManager {
     // Tickable events
     @Override
     public void movePlayer() {
-        if (this.flying) {
+        if (Hack.getHackById("Fly").enabled()) {
             this.setVel(this.velocity);
         } else if (this.velocity != Vec3d.ZERO) {
-            this.setVel(new Vec3d(this.velocity.x, this.getVel().y, this.velocity.z));
+            this.setVel(this.velocity);
         }
 
         this.velocity = Vec3d.ZERO;
@@ -81,30 +82,30 @@ public abstract class ClientPlayerEntityMixin implements PlayerManager {
     @Override
     public void moveLeft(double amount) {
         Vec3d vel = this.getRot().rotateY((float) Math.toRadians(90)).multiply(amount);
-        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, 0, vel.z));
+        this.velocity = new Vec3d(vel.x, this.getVel().y, vel.z);
     }
     @Override
     public void moveRight(double amount) {
         Vec3d vel = this.getRot().rotateY((float) Math.toRadians(-90)).multiply(amount);
-        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, 0, vel.z));
+        this.velocity = new Vec3d(vel.x, this.getVel().y, vel.z);
     }
     @Override
     public void moveForwardsFlat(double amount) {
         Vec3d vel = this.getRot().multiply(amount);
-        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, 0, vel.z));
+        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, this.getVel().y, vel.z));
     }
     @Override
     public void moveBackwardsFlat(double amount) {
         Vec3d vel = this.getRot().negate().multiply(amount);
-        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, 0, vel.z));
+        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, this.getVel().y, vel.z));
     }
     @Override
     public void moveUp(double amount) {
-        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(0, amount, 0));
+        this.velocity = new Vec3d(this.velocity.x, amount, this.velocity.z);
     }
     @Override
     public void moveDown(double amount) {
-        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(0, -amount, 0));
+        this.velocity = new Vec3d(this.velocity.x, -amount, this.velocity.z);
     }
 
     // Flight
@@ -144,7 +145,7 @@ public abstract class ClientPlayerEntityMixin implements PlayerManager {
     }
     @Override
     public void hiddenChat(String message) {
-        this.getPlayerRaw().sendSystemMessage(Text.of(message), null);
+        this.getPlayerRaw().sendMessage(Text.of(message));
     }
 
     // Events
