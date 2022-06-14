@@ -45,6 +45,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           title: "BrightCraft Release (Auto-Generated)"
+          prerelease: false
           files: |
             LICENSE
             build/libs/brightcraft.jar
