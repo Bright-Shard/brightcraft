@@ -2,14 +2,12 @@ package dev.brightshard.brightcraft.hacks;
 
 import dev.brightshard.brightcraft.events.EventData;
 import dev.brightshard.brightcraft.events.EventHandler;
+import dev.brightshard.brightcraft.lib.Antikick;
 import dev.brightshard.brightcraft.lib.Hack;
-import net.minecraft.util.math.Vec3d;
 
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
-
-import static dev.brightshard.brightcraft.lib.MathTools.addVectors;
 
 public class Fly extends Hack {
 
@@ -27,6 +25,7 @@ public class Fly extends Hack {
     @Override
     public void onEnable() {
         Hack.getHackById("Jetpack").disable();
+        Antikick.enable();
         super.onEnable();
     }
 
@@ -34,32 +33,33 @@ public class Fly extends Hack {
     public void onDisable() {
         Objects.requireNonNull(Hack.getHackById("NoClip")).disable();
         super.onDisable();
+        Antikick.disable();
     }
 
     private void tick() {
         // Update FlySpeed in case it was changed
-        double flySpeed = Double.parseDouble(config.getConfig("FlySpeed", "1.0"));
+        double flySpeed = Double.parseDouble(CONFIG.getConfig("FlySpeed", "1.0"));
 
         // Strafe controls
-        if (options.forwardKey.isPressed()) {
-            player.moveForwards(flySpeed);
+        if (CLIENT.getOptions().forwardKey.isPressed()) {
+            CLIENT.getPlayer().moveForwards(flySpeed);
         }
-        if (options.backKey.isPressed()) {
-            player.moveBackwards(flySpeed);
+        if (CLIENT.getOptions().backKey.isPressed()) {
+            CLIENT.getPlayer().moveBackwards(flySpeed);
         }
-        if (options.leftKey.isPressed()) {
-            player.moveLeft(flySpeed);
+        if (CLIENT.getOptions().leftKey.isPressed()) {
+            CLIENT.getPlayer().moveLeft(flySpeed);
         }
-        if (options.rightKey.isPressed()) {
-            player.moveRight(flySpeed);
+        if (CLIENT.getOptions().rightKey.isPressed()) {
+            CLIENT.getPlayer().moveRight(flySpeed);
         }
 
         // Up/Down
-        if (options.jumpKey.isPressed()) {
-            player.moveUp(flySpeed);
+        if (CLIENT.getOptions().jumpKey.isPressed()) {
+            CLIENT.getPlayer().moveUp(flySpeed);
         }
-        if (options.sneakKey.isPressed()) {
-            player.moveDown(flySpeed);
+        if (CLIENT.getOptions().sneakKey.isPressed()) {
+            CLIENT.getPlayer().moveDown(flySpeed);
         }
     }
 }

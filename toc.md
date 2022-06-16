@@ -36,12 +36,13 @@ the XRay cheat will handle that event and only render a block if it's selected i
 # BrightCraft's Libraries
 - [`/lib/`](src/main/java/dev/brightshard/brightcraft/lib): Libraries for BrightCraft. These just save me time while
 programming.
-    - `Chat`: Tool for sending chat messages (to the player, not everyone on the server)
-    - `Config`: This manages configuration (e.g. what cheats are enabled) and saves them to a config file.
-    - `Hack`: The core Hack class that all the cheats extend.
-    - `MathTools`: Useful math functions.
-    - `XRayBlockGroup`: A class for storing a group of blocks in a group - e.g. all ore blocks in the ore group.
-    - `Keybinds`: Manages keybinds.
+  - `Antikick`: Prevents getting kicked from the server while flying
+  - `Chat`: Tool for sending chat messages (to the player, not everyone on the server)
+  - `Config`: This manages configuration (e.g. what cheats are enabled) and saves them to a config file.
+  - `Hack`: The core Hack class that all the cheats extend.
+  - `MathTools`: Useful math functions.
+  - `XRayBlockGroup`: A class for storing a group of blocks in a group - e.g. all ore blocks in the ore group.
+  - `Keybinds`: Manages keybinds.
 
 
 
@@ -60,6 +61,7 @@ They're almost all interfaces that are then implemented by the mixins so that th
 events for the cheats to handle.
     - `BlockMixin`: (When XRay is on) Makes XRay work by setting `shouldDrawSide` to false for blocks that
       shouldn't be visible (e.g. dirt and stone).
+    - `BlockOcclusionCacheMixin`: Allows XRay to work with Iris Shaders/Sodium.
     - `ClientPlayerEntityMixin`: Implements the PlayerManager interface.
     - `ClientPlayerInteractionManagerMixin`: Implements the InteractionManager interface.
     - `ClientPlayerNetworkHandlerMixin`: Tells BrightCraft when the player joins a world.

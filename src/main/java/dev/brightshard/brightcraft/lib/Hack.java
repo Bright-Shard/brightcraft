@@ -6,6 +6,7 @@ import dev.brightshard.brightcraft.events.EventManager;
 import dev.brightshard.brightcraft.managers.ClientManager;
 import dev.brightshard.brightcraft.managers.GameOptionsManager;
 import dev.brightshard.brightcraft.managers.PlayerManager;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import org.slf4j.Logger;
 
@@ -14,13 +15,11 @@ import java.util.Collection;
 import java.util.Hashtable;
 
 public abstract class Hack {
-    protected static final Config config = Config.getInstance();
+    // Constants
+    protected static final Config CONFIG = Config.getInstance();
     protected static final Logger LOGGER = Main.LOGGER;
-
-    protected static final Main main = Main.getInstance();
-    protected static PlayerManager player = main.getPlayer();
-    protected static ClientManager client = main.getClient();
-    protected static GameOptionsManager options = client.getOptions();
+    protected static ClientManager CLIENT = Main.CLIENT;
+    protected static MinecraftClient MC = Main.MC;
     protected static Hashtable<String, Hack> hacks = new Hashtable<>();
 
     public String id;
@@ -51,18 +50,18 @@ public abstract class Hack {
     }
 
     public boolean enabled() {
-        return config.getConfig(this.id).equals("true");
+        return CONFIG.getConfig(this.id).equals("true");
     }
     public void enable() {
         if (!this.enabled()) {
-            config.setConfig(this.id, "true");
+            CONFIG.setConfig(this.id, "true");
             this.onEnable();
             new Chat(this);
         }
     }
     public void disable() {
         if (this.enabled()) {
-            config.setConfig(this.id, "false");
+            CONFIG.setConfig(this.id, "false");
             this.onDisable();
             new Chat(this);
         }
@@ -83,7 +82,7 @@ public abstract class Hack {
         return hacks.values();
     }
     public static PlayerManager getPlayer() {
-        return player;
+        return CLIENT.getPlayer();
     }
     public static Hack getHackById(String id) {
         if (hacks == null) {
@@ -91,11 +90,6 @@ public abstract class Hack {
         }
         Hack hack = hacks.get(id);
         return (hack != null ? hack : new EmptyHackClass());
-    }
-    public static void reloadHacks() {
-        player = main.getPlayer();
-        client = main.getClient();
-        options = client.getOptions();
     }
 
     public static void enableHacks() {

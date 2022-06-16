@@ -2,6 +2,7 @@ package dev.brightshard.brightcraft.hacks;
 
 import dev.brightshard.brightcraft.events.EventData;
 import dev.brightshard.brightcraft.events.EventHandler;
+import dev.brightshard.brightcraft.lib.Antikick;
 import dev.brightshard.brightcraft.lib.Hack;
 import net.minecraft.util.math.Vec3d;
 
@@ -23,28 +24,30 @@ public class Jetpack extends Hack {
     @Override
     public void onEnable() {
         Hack.getHackById("Fly").disable();
+        Antikick.enable();
         super.onEnable();
-        player.flying(true);
+        CLIENT.getPlayer().flying(true);
     }
 
     @Override
     public void onDisable() {
         super.onDisable();
-        player.flying(false);
+        CLIENT.getPlayer().flying(false);
+        Antikick.disable();
     }
 
     private void tick() {
         // Reset newVelocity
-        Vec3d velocity = player.getVel();
+        Vec3d velocity = CLIENT.getPlayer().getVel();
         // Update FlySpeed in case it was changed
-        double flySpeed = Double.parseDouble(config.getConfig("FlySpeed", "1.0"));
+        double flySpeed = Double.parseDouble(CONFIG.getConfig("FlySpeed", "1.0"));
 
         // Better air strafing
-        player.setAirStrafingSpeed((float) flySpeed / 12);
+        CLIENT.getPlayer().setAirStrafingSpeed((float) flySpeed / 12);
 
         // Jump for jetpack
-        if (options.jumpKey.isPressed()) {
-            player.setVel(new Vec3d(velocity.x, flySpeed, velocity.z));
+        if (CLIENT.getOptions().jumpKey.isPressed()) {
+            CLIENT.getPlayer().setVel(new Vec3d(velocity.x, flySpeed, velocity.z));
         }
     }
 }

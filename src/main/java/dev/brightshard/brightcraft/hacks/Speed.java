@@ -3,10 +3,7 @@ package dev.brightshard.brightcraft.hacks;
 import dev.brightshard.brightcraft.events.EventData;
 import dev.brightshard.brightcraft.events.EventHandler;
 import dev.brightshard.brightcraft.lib.Hack;
-import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
-
-import static dev.brightshard.brightcraft.lib.MathTools.addVectors;
 
 public class Speed extends Hack {
     public Speed() {
@@ -22,20 +19,20 @@ public class Speed extends Hack {
 
     private void tick() {
         // Update FlySpeed in case it was changed
-        double speed = Double.parseDouble(config.getConfig("SpeedAmount", "1.0"));
+        double speed = Double.parseDouble(CONFIG.getConfig("SpeedAmount", "1.0"));
 
         // Strafe controls
-        if (options.forwardKey.isPressed()) {
-            player.moveForwardsFlat(speed);
+        if (CLIENT.getOptions().forwardKey.isPressed()) {
+            CLIENT.getPlayer().moveForwardsFlat(speed);
         }
-        if (options.backKey.isPressed()) {
-            player.moveBackwardsFlat(speed);
+        if (CLIENT.getOptions().backKey.isPressed()) {
+            CLIENT.getPlayer().moveBackwardsFlat(speed);
         }
-        if (options.leftKey.isPressed()) {
-            player.moveLeft(speed);
+        if (CLIENT.getOptions().leftKey.isPressed()) {
+            CLIENT.getPlayer().moveLeft(speed);
         }
-        if (options.rightKey.isPressed()) {
-            player.moveRight(speed);
+        if (CLIENT.getOptions().rightKey.isPressed()) {
+            CLIENT.getPlayer().moveRight(speed);
         }
     }
 }

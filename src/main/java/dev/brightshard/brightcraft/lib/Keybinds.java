@@ -41,7 +41,7 @@ public class Keybinds {
             }
         }
         if (UIKeybind.isPressed()) {
-            Main.getInstance().getClient().setScreen(SettingsMenu.getInstance());
+            Main.CLIENT.setScreen(SettingsMenu.getInstance());
         }
     }
 

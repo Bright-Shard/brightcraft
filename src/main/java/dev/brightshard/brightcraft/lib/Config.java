@@ -183,7 +183,7 @@ public class Config {
     };
 
     public Config() {
-        LOGGER.info("Loading BrightCraft config");
+        LOGGER.info("Loading BrightCraft CONFIG");
         try {
             config.load(Files.newInputStream(configFile));
         } catch (IOException e) {

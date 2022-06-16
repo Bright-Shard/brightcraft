@@ -1,6 +1,5 @@
 package dev.brightshard.brightcraft.ui.widgets;
 
-import dev.brightshard.brightcraft.ui.widgets.BrightScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.StringVisitable;
 import net.minecraft.text.Text;
@@ -17,7 +16,7 @@ public class Button extends ButtonWidget {
             (button, matrices, mouseX, mouseY) -> { // The tooltip
                 parent.renderOrderedTooltip( // Show the tooltip
                         matrices, // idfk tbh, just copied this part
-                        BrightScreen.client.textRenderer.wrapLines(StringVisitable.plain(tooltip), // The text
+                        BrightScreen.CLIENT.textRenderer.wrapLines(StringVisitable.plain(tooltip), // The text
                                 Math.max(parent.width / 2 - 50, 150)), // Whichever is bigger - half the screen + 50 pixels or 150 pixels
                         mouseX, // Mouse X coord
                         mouseY // Mouse Y coord

@@ -19,6 +19,7 @@ public class SimpleOptionMixin<T> {
 
     /**
      * @author BrightShard
+     * @reason Remove limits for SimpleValues
      */
     @Overwrite
     public void setValue(T value) {

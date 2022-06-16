@@ -1,5 +1,7 @@
 package dev.brightshard.brightcraft.events;
 
+import dev.brightshard.brightcraft.Main;
+
 import java.util.Hashtable;
 
 public class EventManager {

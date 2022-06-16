@@ -21,12 +21,12 @@ public class NoFallDamage extends Hack {
     }
 
     private void tick() {
-        Vec3d velocity = player.getVel();
+        Vec3d velocity = CLIENT.getPlayer().getVel();
         // Just flying downwards, and not quickly enough to take damage
-        if (player.flying() && player.sneaking() && velocity.y > -0.5) {
+        if (CLIENT.getPlayer().flying() && CLIENT.getPlayer().sneaking() && velocity.y > -0.5) {
             return;
         }
-        player.setFallDistance(0);
-        player.sendPacket(new PlayerMoveC2SPacket.OnGroundOnly(true));
+        CLIENT.getPlayer().setFallDistance(0);
+        CLIENT.getPlayer().sendPacket(new PlayerMoveC2SPacket.OnGroundOnly(true));
     }
 }

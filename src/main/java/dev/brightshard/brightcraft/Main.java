@@ -4,7 +4,6 @@ import dev.brightshard.brightcraft.hacks.*;
 import dev.brightshard.brightcraft.events.EventManager;
 import dev.brightshard.brightcraft.managers.ClientManager;
 import dev.brightshard.brightcraft.lib.Keybinds;
-import dev.brightshard.brightcraft.managers.PlayerManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -18,12 +17,12 @@ import dev.brightshard.brightcraft.lib.*;
 import java.util.Objects;
 
 public class Main implements ClientModInitializer {
-	// For antikick
-	private static int tickCounter = 40;
-	private static final double fallDistance = 0.04;
-
-	// Useful services
+	// Constants
 	public static final Logger LOGGER = LoggerFactory.getLogger("BrightCraft");
+	public static final MinecraftClient MC = MinecraftClient.getInstance();
+	public static final ClientManager CLIENT = (ClientManager) MC;
+
+	// Other services
 	private final Keybinds keybinds = Keybinds.getInstance();
 	private final Chat chat = new Chat();
 	public boolean worldJoined;
@@ -62,42 +61,14 @@ public class Main implements ClientModInitializer {
 	}
 
 	public void tick(MinecraftClient client) {
+		EventManager.fireEvent("pretick");
 		if (this.worldJoined) {
 			this.onWorldJoin(client);
 		} else if (!this.ready) return;
 
-		Hack.reloadHacks(); // Update client/player for hacks in case the player died
-
-		antikick();
-		keybinds.tick();
 		EventManager.fireEvent("tick");
-		this.getPlayer().movePlayer();
-	}
-
-	private void antikick() {
-		// Player velocity
-		Vec3d velocity = this.getPlayer().getVel();
-
-		// Only run when the player is fly hacking and not already falling
-		if (!this.getPlayer().flying() || velocity.y <= -fallDistance) {
-			tickCounter = 40;
-			return;
-		}
-
-		// 1 tick after the counter hits 0, move the player back up and reset the flyCounter
-		if (tickCounter == 0) {
-			this.getPlayer().setVel(new Vec3d(velocity.x, fallDistance, velocity.z));
-			tickCounter = 40;
-		}
-
-		// Decrement the flyCounter once per tick
-		--tickCounter;
-
-		// When the counter hits 0, move the player down
-		if (tickCounter == 0) {
-			this.getPlayer().setVel(new Vec3d(velocity.x, -fallDistance, velocity.z));
-			LOGGER.info("Antikick ran");
-		}
+		keybinds.tick();
+		CLIENT.getPlayer().movePlayer();
 	}
 
 	public void onWorldJoin(MinecraftClient client) {
@@ -108,7 +79,6 @@ public class Main implements ClientModInitializer {
 
 		LOGGER.info("World joined");
 
-		Hack.reloadHacks();
 		Hack.enableHacks();
 
 		// Chat hack statuses
@@ -132,13 +102,6 @@ public class Main implements ClientModInitializer {
 
 	public boolean ready() {
 		return this.ready;
-	}
-
-	public PlayerManager getPlayer() {
-		return (PlayerManager) MinecraftClient.getInstance().player;
-	}
-	public ClientManager getClient() {
-		return (ClientManager) MinecraftClient.getInstance();
 	}
 
 	public static Main getInstance() {

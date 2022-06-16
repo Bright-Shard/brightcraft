@@ -16,14 +16,14 @@ public class Instabreak extends Hack {
             @Override
             public <DataType, CIRType> void fire(EventData<DataType, CIRType> data) {
                 Object[] blockInfo = data.getData();
-                player.getIM().sendAction(PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK, (BlockPos) blockInfo[0], (Direction) blockInfo[1]);
+                CLIENT.getPlayer().getIM().sendAction(PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK, (BlockPos) blockInfo[0], (Direction) blockInfo[1]);
             }
         });
         this.handlers.add(new EventHandler(instance.id, "BreakingProgressChanged") {
             @Override
             public <DataType, CIRType> void fire(EventData<DataType, CIRType> data) {
-                if (!Boolean.parseBoolean(config.getConfig("InstantMine.Bypass"))) {
-                    player.setCurrentBreakingProgress(0);
+                if (!Boolean.parseBoolean(CONFIG.getConfig("InstantMine.Bypass"))) {
+                    CLIENT.getPlayer().setCurrentBreakingProgress(0);
                 }
             }
         });

@@ -1,13 +1,14 @@
 package dev.brightshard.brightcraft.mixin;
 
 import dev.brightshard.brightcraft.events.EventData;
+import dev.brightshard.brightcraft.lib.Antikick;
 import dev.brightshard.brightcraft.lib.Hack;
 import dev.brightshard.brightcraft.lib.MathTools;
+import dev.brightshard.brightcraft.managers.ClientManager;
 import dev.brightshard.brightcraft.managers.InteractionManager;
 import dev.brightshard.brightcraft.managers.PlayerManager;
 import dev.brightshard.brightcraft.events.EventManager;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
@@ -20,17 +21,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(net.minecraft.client.network.ClientPlayerEntity.class)
 public abstract class ClientPlayerEntityMixin implements PlayerManager {
+    private final ClientManager client = (ClientManager) MinecraftClient.getInstance();
     private boolean flying;
     private Vec3d velocity = Vec3d.ZERO;
     @Shadow protected abstract boolean wouldCollideAt(BlockPos pos);
 
-    private ClientPlayerEntity getPlayerRaw() {
-        return MinecraftClient.getInstance().player;
-    }
-
     // Tickable events
     @Override
     public void movePlayer() {
+        if (Antikick.shouldBlockMovement()) {
+            this.velocity = Vec3d.ZERO;
+            return;
+        }
+
         if (Hack.getHackById("Fly").enabled()) {
             this.setVel(this.velocity);
         } else if (this.velocity != Vec3d.ZERO) {
@@ -43,31 +46,32 @@ public abstract class ClientPlayerEntityMixin implements PlayerManager {
     // Movement properties
     @Override
     public Vec3d getRot() {
-        return this.getPlayerRaw().getRotationVector();
+        return client.getPlayerRaw().getRotationVector();
     }
     @Override
     public Vec3d getVel() {
-        return this.getPlayerRaw().getVelocity();
+        return client.getPlayerRaw().getVelocity();
     }
     @Override
     public void setVel(Vec3d velocity) {
-        this.getPlayerRaw().setVelocity(velocity);
+        if (Antikick.shouldBlockMovement()) return;
+        client.getPlayerRaw().setVelocity(velocity);
     }
     @Override
     public boolean sneaking() {
-        return this.getPlayerRaw().isSneaking();
+        return client.getPlayerRaw().isSneaking();
     }
     @Override
     public void sneaking(boolean isSneaking) {
-        this.getPlayerRaw().setSneaking(isSneaking);
+        client.getPlayerRaw().setSneaking(isSneaking);
     }
     @Override
     public boolean noclip() {
-        return this.getPlayerRaw().noClip;
+        return client.getPlayerRaw().noClip;
     }
     @Override
     public void noclip(boolean enabled) {
-        this.getPlayerRaw().noClip = enabled;
+        client.getPlayerRaw().noClip = enabled;
     }
 
     // Move player
@@ -82,12 +86,12 @@ public abstract class ClientPlayerEntityMixin implements PlayerManager {
     @Override
     public void moveLeft(double amount) {
         Vec3d vel = this.getRot().rotateY((float) Math.toRadians(90)).multiply(amount);
-        this.velocity = new Vec3d(vel.x, this.velocity.y, vel.z);
+        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, this.velocity.y, vel.z));
     }
     @Override
     public void moveRight(double amount) {
         Vec3d vel = this.getRot().rotateY((float) Math.toRadians(-90)).multiply(amount);
-        this.velocity = new Vec3d(vel.x, this.velocity.y, vel.z);
+        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, this.velocity.y, vel.z));
     }
     @Override
     public void moveForwardsFlat(double amount) {
@@ -119,11 +123,11 @@ public abstract class ClientPlayerEntityMixin implements PlayerManager {
     }
     @Override
     public void setFallDistance(float distance) {
-        this.getPlayerRaw().fallDistance = distance;
+        client.getPlayerRaw().fallDistance = distance;
     }
     @Override
     public void setAirStrafingSpeed(float speed) {
-        this.getPlayerRaw().airStrafingSpeed = speed;
+        client.getPlayerRaw().airStrafingSpeed = speed;
     }
 
     // Other functions
@@ -133,7 +137,7 @@ public abstract class ClientPlayerEntityMixin implements PlayerManager {
     }
     @Override
     public void sendPacket(PlayerMoveC2SPacket packet) {
-        this.getPlayerRaw().networkHandler.sendPacket(packet);
+        client.getPlayerRaw().networkHandler.sendPacket(packet);
     }
     @Override
     public void setCurrentBreakingProgress(int progress) {
@@ -145,7 +149,7 @@ public abstract class ClientPlayerEntityMixin implements PlayerManager {
     }
     @Override
     public void hiddenChat(String message) {
-        this.getPlayerRaw().sendMessage(Text.of(message));
+        client.getPlayerRaw().sendMessage(Text.of(message));
     }
 
     // Events

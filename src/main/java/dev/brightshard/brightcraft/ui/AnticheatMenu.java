@@ -15,13 +15,13 @@ public class AnticheatMenu extends BrightScreen {
     @Override
     public void init() {
         super.init();
-        boolean enabled = config.getConfig("Instabreak.Bypass").equals("true");
+        boolean enabled = CONFIG.getConfig("Instabreak.Bypass").equals("true");
         this.addButton("Instant Mine: "+(enabled ? "On" : "Off"),
                 "If Instant Mine doesn't work, try enabling this\nNote: This bypass slows down Instant Mine", (btn) -> {
-            config.setConfig("InstantMine.Bypass", String.valueOf(!enabled));
+            CONFIG.setConfig("InstantMine.Bypass", String.valueOf(!enabled));
             btn.setMessage(Text.of("Instant Mine: "+(!enabled ? "On" : "Off")));
             this.refresh();
         }, false);
-        this.addButton("<- Back", "Go back to the main screen", (btn) -> client.setScreen(SettingsMenu.getInstance()), true);
+        this.addButton("<- Back", "Go back to the main screen", (btn) -> CLIENT.setScreen(SettingsMenu.getInstance()), true);
     }
 }

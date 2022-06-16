@@ -6,7 +6,6 @@ import dev.brightshard.brightcraft.lib.Hack;
 import dev.brightshard.brightcraft.lib.XRayBlockGroup;
 import net.minecraft.block.Block;
 import org.lwjgl.glfw.GLFW;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 public class XRay extends Hack {
@@ -21,7 +20,7 @@ public class XRay extends Hack {
             public <DataType, CIRType> void fire(EventData<DataType, CIRType> data) {
                 CallbackInfoReturnable<Boolean> cir = data.getCIR();
 
-                for (XRayBlockGroup group : config.XRayBlocks) {
+                for (XRayBlockGroup group : CONFIG.XRayBlocks) {
                     if (group.enabled()) {
                         if (group.blocks.contains(data.<Block>getData())) {
                             cir.setReturnValue(true);
@@ -41,7 +40,7 @@ public class XRay extends Hack {
         this.fullBrightWasOff = !this.fullbright.enabled();
         this.fullbright.enable();
 
-        client.worldRenderer.reload();
+        CLIENT.worldRenderer.reload();
     }
 
     @Override
@@ -50,6 +49,6 @@ public class XRay extends Hack {
         if (this.fullBrightWasOff) {
             this.fullbright.disable();
         }
-        client.worldRenderer.reload();
+        CLIENT.worldRenderer.reload();
     }
 }

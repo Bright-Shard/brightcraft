@@ -3,7 +3,6 @@ package dev.brightshard.brightcraft.ui.widgets;
 import dev.brightshard.brightcraft.Main;
 import dev.brightshard.brightcraft.lib.Config;
 import dev.brightshard.brightcraft.managers.ClientManager;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
@@ -11,8 +10,8 @@ import net.minecraft.text.Text;
 public abstract class BrightScreen extends Screen {
     public int row = 0;
     public int column = 0;
-    public static final Config config = Config.getInstance();
-    public static final ClientManager client = Main.getInstance().getClient();
+    public static final Config CONFIG = Config.getInstance();
+    public static final ClientManager CLIENT = Main.CLIENT;
 
     public BrightScreen(String title) {
         super(Text.of(title));
@@ -41,7 +40,7 @@ public abstract class BrightScreen extends Screen {
     }
 
     protected void refresh() {
-        client.setScreen(this);
+        CLIENT.setScreen(this);
     }
 
     protected void updateGrid() {

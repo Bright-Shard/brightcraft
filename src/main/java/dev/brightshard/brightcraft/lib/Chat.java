@@ -6,14 +6,14 @@ import static dev.brightshard.brightcraft.Main.LOGGER;
 
 public class Chat {
     private String longMessage = "";
-    public static String divider = "§kbruhbruhbruhbruhbruhbruhbruhbruh§r";
-    public static String label = "[§aBrightCraft§r] ";
-    public static String on = "[§2ON§r]";
-    public static String off = "[§4OFF§r]";
+    public static final String divider = "§kbruhbruhbruhbruhbruhbruhbruhbruh§r";
+    public static final String label = "[§aBrightCraft§r] ";
+    public static final String on = "[§2ON§r]";
+    public static final String off = "[§4OFF§r]";
 
     public Chat() {}
     public Chat(String text) {
-        Main.getInstance().getPlayer().hiddenChat(label + text);
+        Main.CLIENT.getPlayer().hiddenChat(label + text);
     }
 
     public Chat(Hack hack) {
@@ -28,7 +28,7 @@ public class Chat {
     }
     public void send() {
         LOGGER.info("Sending message: "+this.longMessage);
-        Main.getInstance().getPlayer().hiddenChat(this.longMessage);
+        Main.CLIENT.getPlayer().hiddenChat(this.longMessage);
         this.clear();
     }
 }

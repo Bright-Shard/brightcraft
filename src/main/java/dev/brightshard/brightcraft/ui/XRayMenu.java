@@ -19,18 +19,18 @@ public class XRayMenu extends BrightScreen {
     @Override
     public void init() {
         super.init();
-        for (XRayBlockGroup group : config.XRayBlocks) {
+        for (XRayBlockGroup group : CONFIG.XRayBlocks) {
             String label = group.name;
 
             this.addButton(label + ": " + (group.enabled() ? "On" : "Off"),
                     group.tooltip,
                     (btn) -> {
                             boolean enabled = !group.enabled();
-                            config.setConfig("XRay."+label, (enabled ? "true" : "false"));
+                            CONFIG.setConfig("XRay."+label, (enabled ? "true" : "false"));
                             btn.setMessage(Text.of(label + ": " + (enabled ? "On" : "Off")));
 
                             if (Hack.getHackById("XRay").enabled()) {
-                                client.worldRenderer.reload();
+                                CLIENT.worldRenderer.reload();
                             }
 
                             this.refresh();

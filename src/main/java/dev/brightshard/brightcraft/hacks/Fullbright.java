@@ -36,7 +36,7 @@ public class Fullbright extends Hack {
 
     @Override
     public void onEnable() {
-        this.defaultGamma = options.getGamma();
+        this.defaultGamma = CLIENT.getOptions().getGamma();
         super.onEnable();
 
         // Smoothly brighten the screen
@@ -44,9 +44,9 @@ public class Fullbright extends Hack {
         EventManager.bindEvent(new EventHandler(instance.id, "tick") {
             @Override
             public <DataType, CIRType> void fire(EventData<DataType, CIRType> data) {
-                double currentGamma = options.getGamma();
+                double currentGamma = CLIENT.getOptions().getGamma();
                 if (currentGamma < 16) {
-                    options.setGamma(currentGamma + 0.5);
+                    CLIENT.getOptions().setGamma(currentGamma + 0.5);
                 } else {
                     EventManager.releaseEvent(this);
                 }
@@ -63,8 +63,8 @@ public class Fullbright extends Hack {
         EventManager.bindEvent(new EventHandler(instance.id, "tick") {
             @Override
             public <DataType, CIRType> void fire(EventData<DataType, CIRType> data) {
-                if (options.getGamma() > instance.defaultGamma) {
-                    options.setGamma(options.getGamma() - 0.5);
+                if (CLIENT.getOptions().getGamma() > instance.defaultGamma) {
+                    CLIENT.getOptions().setGamma(CLIENT.getOptions().getGamma() - 0.5);
                 } else {
                     EventManager.releaseEvent(this);
                 }
