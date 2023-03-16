@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "brightcraft",
+  "version": "${version}",
+
+  "name": "BrightCraft",
+  "description": "The 1337 version of Minecraft.",
+  "authors": [
+    "BrightShard"
+  ],
+  "contact": {
+    "homepage": "https://brightshard.dev/",
+    "sources": "https://github.com/Bright-Shard/BrightCraft"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/brightcraft/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "dev.brightshard.brightcraft.BrightCraft"
+    ]
+  },
+  "mixins": [
+    "brightcraft.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.6",
+    "fabric": ">=0.51.0",
+    "minecraft": "~1.19",
+    "java": ">=17"
+  },
+  "suggests": {}
+}
