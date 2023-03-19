@@ -1,70 +1,57 @@
 package dev.brightshard.brightcraft.lib.Event;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 public class Listener {
     public boolean bound;
     public final boolean defaultBind;
-    public boolean acceptsParameter;
+    public final boolean acceptsParameter;
 
-    protected Listener(boolean defaultBind, boolean acceptsParameter) {
+    protected Listener(boolean defaultBind, boolean bound, boolean acceptsParameter) {
         this.defaultBind = defaultBind;
-        this.bound = defaultBind;
-        this.acceptsParameter = acceptsParameter;
-    }
-    protected Listener(boolean acceptsParameter) {
-        this.defaultBind = true;
-        this.bound = false;
+        this.bound = bound;
         this.acceptsParameter = acceptsParameter;
     }
 
-    public interface ParameterizedCallback {
-        void execute(EventDataBuffer data);
+    // A listener that accepts and returns data
+    public static class FullListener<DataType, ReturnType> extends Listener {
+        public final Function<DataType, ReturnType> callback;
+        public FullListener(Function<DataType, ReturnType> callback, boolean defaultBind, boolean bound) {
+            super(defaultBind, bound, true);
+            this.callback = callback;
+        }
     }
-    public interface BlankCallback {
+
+    // A listener that only returns data
+    public static class ReturnableListener<ReturnType> extends Listener {
+        public final Supplier<ReturnType> callback;
+        public ReturnableListener(Supplier<ReturnType> callback, boolean defaultBind, boolean bound) {
+            super(defaultBind, bound, false);
+            this.callback = callback;
+        }
+    }
+
+    // A listener that only accepts data
+    public static class DataListener<DataType> extends Listener {
+        public final Consumer<DataType> callback;
+        public DataListener(Consumer<DataType> callback, boolean defaultBind, boolean bound) {
+            super(defaultBind, bound, true);
+            this.callback = callback;
+        }
+    }
+
+    // A listener that neither accepts nor returns data
+    @FunctionalInterface
+    public interface SimpleCallback {
         void execute();
     }
-
-    public static class ParameterizedListener extends Listener {
-        private final ParameterizedCallback callback;
-
-        public ParameterizedListener(ParameterizedCallback callback) {
-            super(true);
+    public static class SimpleListener extends Listener {
+        public final SimpleCallback callback;
+        public SimpleListener(SimpleCallback callback, boolean defaultBind, boolean bound) {
+            super(defaultBind, bound, false);
             this.callback = callback;
         }
-        public ParameterizedListener(ParameterizedCallback callback, boolean defaultBind) {
-            super(defaultBind, true);
-            this.callback = callback;
-        }
-        public void execute(EventDataBuffer data) {
-            this.callback.execute(data);
-        }
-    }
-
-    public static class BlankListener extends Listener {
-        private final BlankCallback callback;
-
-        public BlankListener(BlankCallback callback) {
-            super(false);
-            this.callback = callback;
-        }
-        public BlankListener(BlankCallback callback, boolean defaultBind) {
-            super(defaultBind, false);
-            this.callback = callback;
-        }
-        public void execute() {
-            this.callback.execute();
-        }
-    }
-
-    public static Listener fromCallback(BlankCallback callback) {
-        return new BlankListener(callback);
-    }
-    public static Listener fromCallback(BlankCallback callback, boolean defaultBind) {
-        return new BlankListener(callback, defaultBind);
-    }
-    public static Listener fromCallback(ParameterizedCallback callback) {
-        return new ParameterizedListener(callback);
-    }
-    public static Listener fromCallback(ParameterizedCallback callback, boolean defaultBind) {
-        return new ParameterizedListener(callback, defaultBind);
     }
 }

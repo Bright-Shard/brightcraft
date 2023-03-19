@@ -1,9 +1,9 @@
 package dev.brightshard.brightcraft.mixin;
 
-import static dev.brightshard.brightcraft.BrightCraft.EVENTS;
-
-import dev.brightshard.brightcraft.lib.Event.EventType;
-
+import dev.brightshard.brightcraft.lib.Event.Events;
+import dev.brightshard.brightcraft.lib.Event.FullEvent;
+import dev.brightshard.brightcraft.lib.LockedBuffer;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -27,12 +27,14 @@ public class BlockOcclusionCacheMixin {
             Direction facing,
             CallbackInfoReturnable<Boolean> cir
     ) {
-        Boolean shouldRender = EVENTS.fireReturnable(
-                EventType.BlockShouldRender,
-                state.getBlock()
-        );
-        if (shouldRender != null && !shouldRender) {
-            cir.cancel();
+        // Fire the BlockShouldRender event; if it returns false, prevent the block from rendering
+        try (LockedBuffer<FullEvent<Block, Boolean>>.Lock lock = Events.BlockShouldRender.lock()) {
+            Boolean render = lock.readBuffer().fire(state.getBlock());
+            if (render != null && !render) {
+                cir.cancel();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

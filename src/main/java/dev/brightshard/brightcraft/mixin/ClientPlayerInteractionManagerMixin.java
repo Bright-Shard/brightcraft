@@ -1,10 +1,10 @@
 package dev.brightshard.brightcraft.mixin;
 
-import static dev.brightshard.brightcraft.BrightCraft.*;
-
-import dev.brightshard.brightcraft.lib.Event.EventType;
-import dev.brightshard.brightcraft.lib.Event.EventDataBuffer;
-import dev.brightshard.brightcraft.patches.PatchedPlayerInteraction;
+import dev.brightshard.brightcraft.lib.Event.DataEvent;
+import dev.brightshard.brightcraft.lib.Event.Events;
+import dev.brightshard.brightcraft.lib.Event.SimpleEvent;
+import dev.brightshard.brightcraft.lib.LockedBuffer;
+import dev.brightshard.brightcraft.patches.PatchedInteractionManager;
 import dev.brightshard.brightcraft.hacks.Instabreak;
 
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(net.minecraft.client.network.ClientPlayerInteractionManager.class)
-public abstract class ClientPlayerInteractionManagerMixin implements PatchedPlayerInteraction {
+public abstract class ClientPlayerInteractionManagerMixin implements PatchedInteractionManager {
     @Shadow
     private float currentBreakingProgress;
     @Shadow
@@ -38,16 +38,19 @@ public abstract class ClientPlayerInteractionManagerMixin implements PatchedPlay
     @Inject(method = "updateBlockBreakingProgress(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z",
     at = @At("HEAD"))
     private void updateBlockBreakingProgress(BlockPos pos, Direction dir, CallbackInfoReturnable<Boolean> cir) {
-        EventDataBuffer buffer = new EventDataBuffer();
-        buffer.setValue(new Instabreak.BlockInfo(pos, dir));
-        EVENTS.fire(
-                EventType.BlockBreaking,
-                buffer
-        );
+        try (LockedBuffer<DataEvent<Instabreak.BlockInfo>>.Lock lock = Events.BlockBreaking.lock()) {
+            lock.readBuffer().fire(new Instabreak.BlockInfo(pos, dir));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
-        EVENTS.fire(EventType.BreakingProgressChanged);
+        try (LockedBuffer<SimpleEvent>.Lock lock = Events.BreakingProgressChanged.lock()) {
+            lock.readBuffer().fire();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

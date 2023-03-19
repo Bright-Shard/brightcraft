@@ -1,7 +1,6 @@
 package dev.brightshard.brightcraft.hacks;
 
 import dev.brightshard.brightcraft.lib.Event.EventDataBuffer;
-import dev.brightshard.brightcraft.lib.Event.EventType;
 import dev.brightshard.brightcraft.lib.Event.Events;
 import dev.brightshard.brightcraft.lib.Hack;
 import dev.brightshard.brightcraft.lib.XRayBlockGroup;
@@ -20,21 +19,17 @@ public class XRay extends Hack {
                 "Only show important blocks (ores, monsters, lava, etc)\nAlso enables Fullbright",
                 GLFW.GLFW_KEY_X
         );
-        this.bindEvent(Events.BlockShouldRender, this::blockShouldRender);
+        this.listen(Events.BlockShouldRender, this::blockShouldRender);
     }
 
     // Handles the BlockShouldRender event
-    private void blockShouldRender(EventDataBuffer buffer) {
-        Block data = buffer.getValue();
+    private Boolean blockShouldRender(Block data) {
         for (XRayBlockGroup group : BLOCKS) {
-            if (group.enabled()) {
-                if (group.blocks.contains(data)) {
-                    buffer.setValue(true);
-                    return;
-                }
+            if (group.enabled() && group.blocks.contains(data)) {
+                return Boolean.TRUE;
             }
         }
-        buffer.setValue(false);
+        return Boolean.FALSE;
     }
 
     // The world renderer needs to be reloaded when the hack is enabled/disabled

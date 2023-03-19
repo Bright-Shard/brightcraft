@@ -1,10 +1,9 @@
 package dev.brightshard.brightcraft.hacks;
 
-import dev.brightshard.brightcraft.lib.Event.EventType;
 import dev.brightshard.brightcraft.lib.Event.Events;
 import dev.brightshard.brightcraft.lib.Hack;
 
-import static dev.brightshard.brightcraft.BrightCraft.CLIENT;
+import static dev.brightshard.brightcraft.BrightCraft.*;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -16,7 +15,8 @@ public class Speed extends Hack {
                 "Move faster",
                 GLFW.GLFW_KEY_V
         );
-        this.bindEvent(Events.Tick, this::tick);
+        this.listen(Events.Tick, this::tick);
+        this.addBlacklist(HackType.Fly);
     }
 
     private void tick() {
@@ -26,16 +26,16 @@ public class Speed extends Hack {
 
         // Strafe controls
         if (CLIENT.getOptions().forwardKey.isPressed()) {
-            CLIENT.getPlayer().moveForwardsFlat(speed);
+            PLAYER.moveForwardsFlat(speed);
         }
         if (CLIENT.getOptions().backKey.isPressed()) {
-            CLIENT.getPlayer().moveBackwardsFlat(speed);
+            PLAYER.moveBackwardsFlat(speed);
         }
         if (CLIENT.getOptions().leftKey.isPressed()) {
-            CLIENT.getPlayer().moveLeft(speed);
+            PLAYER.moveLeftFlat(speed);
         }
         if (CLIENT.getOptions().rightKey.isPressed()) {
-            CLIENT.getPlayer().moveRight(speed);
+            PLAYER.moveRightFlat(speed);
         }
     }
 }

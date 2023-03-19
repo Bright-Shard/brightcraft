@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
 public class BrightCraft implements ClientModInitializer {
     // Constants for the whole client
     public static final Logger LOGGER = LoggerFactory.getLogger("BrightCraft");
-    public static final EventManager EVENTS = new EventManager();
-    public static final MinecraftClient MC = MinecraftClient.getInstance();
-    public static final PatchedClient CLIENT = (PatchedClient) MC;
+    public static final MinecraftClient RAWCLIENT = MinecraftClient.getInstance();
+    public static final PatchedClient CLIENT = (PatchedClient) RAWCLIENT;
+    public static final PatchedPlayer PLAYER = new PatchedPlayer();
     public static boolean INITIALIZED = false;
     public static boolean ENABLED = false;
     public static final KeybindManager KEYBINDS = new KeybindManager();
@@ -62,14 +62,22 @@ public class BrightCraft implements ClientModInitializer {
     // Fires the Tick event
     private void tick(MinecraftClient client) {
         if (ENABLED) {
-            EVENTS.fire(EventType.Tick);
+            try (LockedBuffer<SimpleEvent>.Lock lock = Events.Tick.lock()) {
+                lock.readBuffer().fire();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     // Fires the PreTick event
     private void preTick(MinecraftClient client) {
         if (ENABLED) {
-            EVENTS.fire(EventType.PreTick);
+            try (LockedBuffer<SimpleEvent>.Lock lock = Events.PreTick.lock()) {
+                lock.readBuffer().fire();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -77,14 +85,22 @@ public class BrightCraft implements ClientModInitializer {
     private void worldJoined(ClientPlayNetworkHandler clientPlayNetworkHandler, PacketSender packetSender, MinecraftClient client) {
         LOGGER.info("World joined!");
         ENABLED = true;
-        EVENTS.fire(EventType.WorldJoined);
+        try (LockedBuffer<SimpleEvent>.Lock lock = Events.WorldJoined.lock()) {
+            lock.readBuffer().fire();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Fires the WorldLeft event
     private void worldLeft(ClientPlayNetworkHandler clientPlayNetworkHandler, MinecraftClient client) {
         LOGGER.info("World left!");
         ENABLED = false;
-        EVENTS.fire(EventType.WorldLeft);
+        try (LockedBuffer<SimpleEvent>.Lock lock = Events.WorldLeft.lock()) {
+            lock.readBuffer().fire();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Saves config when Minecraft exits

@@ -1,13 +1,16 @@
 package dev.brightshard.brightcraft.lib;
 
-import dev.brightshard.brightcraft.lib.Event.Event;
-import dev.brightshard.brightcraft.lib.Event.Listener;
+import dev.brightshard.brightcraft.lib.Event.*;
 import net.minecraft.client.option.KeyBinding;
 import static dev.brightshard.brightcraft.BrightCraft.LOGGER;
 
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public abstract class Hack {
     // STATIC MEMBERS/FIELDS
@@ -61,8 +64,8 @@ public abstract class Hack {
     // Any hacks the hack can't work with or needs to work correctly
     protected final Vector<HackType> blacklist = new Vector<>();
     protected final Vector<HackType> dependencies = new Vector<>();
-    // Any hacks that were changed when this hack was enabled
-    protected final Vector<HackType> changed = new Vector<>();
+    // Any dependencies we changed by enabling
+    protected final Vector<HackType> changedDependencies = new Vector<>();
 
     public Hack(HackType id, String name, String tooltip, int key) {
         // Set the hack ID/Name/Description
@@ -71,7 +74,7 @@ public abstract class Hack {
         // Create and bind the keybinding for this hack (if it has a keybind)
         if (key != -1) {
             KeyBinding binding = new KeyBinding("brightcraft."+id, key, "category.brightcraft");
-            LOGGER.info("brightcraft."+id);
+            LOGGER.info("|- Loading hack: brightcraft."+id);
             this.keybind = new Keybind(binding, this::toggle, 5);
         }
 
@@ -80,40 +83,53 @@ public abstract class Hack {
     }
 
     // Add an event listener
-    // Variants:
-    //  1. Callback type: Can accept an EventHandler, or no arguments
-    //  2. EventHandler type: Can start out enabled or disabled
-    protected <EventType extends Event> Listener bindEvent(LockedBuffer<EventType> eventLock, Listener.BlankCallback callback) {
-        Event event = eventLock.lock();
-        Listener listener = Listener.fromCallback(callback);
-        event.addListener(listener);
-        this.listeners.add(listener);
-        eventLock.unlock();
-        return listener;
+    protected <EventType extends SimpleEvent> Listener listen(
+            LockedBuffer<EventType> eventLock,
+            Listener.SimpleCallback callback
+    ) {
+        try (LockedBuffer<EventType>.Lock event = eventLock.lock()) {
+            Listener listener = event.readBuffer().listen(callback);
+            this.listeners.add(listener);
+            return listener;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
-    protected <EventType extends Event> Listener bindDisabledEvent(LockedBuffer<EventType> eventLock, Listener.BlankCallback callback) {
-        Event event = eventLock.lock();
-        Listener listener = Listener.fromCallback(callback, false);
-        event.addListener(listener);
-        this.listeners.add(listener);
-        eventLock.unlock();
-        return listener;
+    protected <EventType extends DataEvent<DataType>, DataType> Listener listen(
+            LockedBuffer<EventType> eventLock,
+            Consumer<DataType> callback
+    ) {
+        try (LockedBuffer<EventType>.Lock event = eventLock.lock()) {
+            Listener listener = event.readBuffer().listen(callback);
+            this.listeners.add(listener);
+            return listener;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
-    protected <EventType extends Event> Listener bindEvent(LockedBuffer<EventType> eventLock, Listener.ParameterizedCallback callback) {
-        Event event = eventLock.lock();
-        Listener listener = Listener.fromCallback(callback);
-        event.addListener(listener);
-        this.listeners.add(listener);
-        eventLock.unlock();
-        return listener;
+    protected <EventType extends ReturnableEvent<ReturnType>, ReturnType> Listener listen(
+            LockedBuffer<EventType> eventLock,
+            Supplier<ReturnType> callback
+    ) {
+        try (LockedBuffer<EventType>.Lock event = eventLock.lock()) {
+            Listener listener = event.readBuffer().listen(callback);
+            this.listeners.add(listener);
+            return listener;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
-    protected <EventType extends Event> Listener bindDisabledEvent(LockedBuffer<EventType> eventLock, Listener.ParameterizedCallback callback) {
-        Event event = eventLock.lock();
-        Listener listener = Listener.fromCallback(callback, false);
-        event.addListener(listener);
-        this.listeners.add(listener);
-        eventLock.unlock();
-        return listener;
+    protected <EventType extends FullEvent<DataType, ReturnType>, DataType, ReturnType> Listener listen(
+            LockedBuffer<EventType> eventLock,
+            Function<DataType, ReturnType> callback
+    ) {
+        try (LockedBuffer<EventType>.Lock event = eventLock.lock()) {
+            Listener listener = event.readBuffer().listen(callback);
+            this.listeners.add(listener);
+            return listener;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     // Blacklist a hack
@@ -142,22 +158,22 @@ public abstract class Hack {
                 listener.bound = listener.defaultBind;
             }
 
-            // Turn on any dependencies & off any blacklisted hacks
-            for (HackType id : this.dependencies) {
-                Hack hack = Hack.getHack(id);
-                if (!hack.enabled) {
-                    this.changed.add(id);
-                    hack.enable();
-                }
-            }
+            // Disable blacklists, enable dependencies
             for (HackType id : this.blacklist) {
                 Hack hack = Hack.getHack(id);
                 if (hack.enabled) {
-                    this.changed.add(id);
                     hack.disable();
                 }
             }
+            for (HackType id : this.dependencies) {
+                Hack hack = Hack.getHack(id);
+                if (!hack.enabled) {
+                    hack.enable();
+                    this.changedDependencies.add(hack.id);
+                }
+            }
             this.enabled = true;
+            LOGGER.info("Enabled hack " + this.id);
         }
     }
     // Callback when the hack is disabled
@@ -167,13 +183,13 @@ public abstract class Hack {
                 listener.bound = false;
             }
 
-            // Reset any hacks this hack changed by turning on
-            for (HackType hack : this.changed) {
-                LOGGER.info("Resetting changed hack " + hack);
-                Hack.getHack(hack).toggle();
+            for (HackType id : this.changedDependencies) {
+                Hack.getHack(id).disable();
             }
-            this.changed.clear();
+            this.changedDependencies.clear();
+
             this.enabled = false;
+            LOGGER.info("Disabled hack " + this.id);
         }
     }
 }

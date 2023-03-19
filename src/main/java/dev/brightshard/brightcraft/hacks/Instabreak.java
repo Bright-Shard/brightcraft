@@ -30,19 +30,18 @@ public class Instabreak extends Hack {
                 "Mine blocks much faster",
                 GLFW.GLFW_KEY_I
         );
-        this.bindEvent(Events.BlockBreaking, this::blockBreaking);
-        this.bindEvent(Events.BreakingProgressChanged, this::breakingProgressChanged);
+        this.listen(Events.BlockBreaking, this::blockBreaking);
+        this.listen(Events.BreakingProgressChanged, this::breakingProgressChanged);
     }
 
     private void breakingProgressChanged() {
         if (!this.bypass.getRawValue()) {
-            CLIENT.getPlayer().setCurrentBreakingProgress(0);
+            CLIENT.getInteractionManager().setCurrentBreakingProgress(0);
         }
     }
 
-    private void blockBreaking(EventDataBuffer buffer) {
-        BlockInfo info = buffer.getValue();
-        CLIENT.getPlayer().getIM().sendAction(
+    private void blockBreaking(BlockInfo info) {
+        CLIENT.getInteractionManager().sendAction(
                 PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK,
                 info.pos,
                 info.dir

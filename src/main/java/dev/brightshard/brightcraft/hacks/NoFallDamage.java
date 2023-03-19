@@ -1,10 +1,9 @@
 package dev.brightshard.brightcraft.hacks;
 
-import dev.brightshard.brightcraft.lib.Event.EventType;
 import dev.brightshard.brightcraft.lib.Event.Events;
 import dev.brightshard.brightcraft.lib.Hack;
 
-import static dev.brightshard.brightcraft.BrightCraft.CLIENT;
+import static dev.brightshard.brightcraft.BrightCraft.RAWCLIENT;
 
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.math.Vec3d;
@@ -18,16 +17,17 @@ public class NoFallDamage extends Hack {
                 "Don't take any fall damage",
                 GLFW.GLFW_KEY_G
         );
-        this.bindEvent(Events.Tick, this::tick);
+        this.listen(Events.Tick, this::tick);
     }
 
     private void tick() {
-        Vec3d velocity = CLIENT.getPlayer().getVel();
+        assert RAWCLIENT.player != null;
+        Vec3d velocity = RAWCLIENT.player.getVelocity();
         // Just flying downwards, and not quickly enough to take damage
-        if (CLIENT.getPlayer().sneaking() && velocity.y > -0.5) {
+        if (RAWCLIENT.player.isSneaking() && velocity.y > -0.5) {
             return;
         }
-        CLIENT.getPlayer().setFallDistance(0);
-        CLIENT.getPlayer().sendPacket(new PlayerMoveC2SPacket.OnGroundOnly(true));
+        RAWCLIENT.player.fallDistance = 0;
+        RAWCLIENT.player.networkHandler.sendPacket(new PlayerMoveC2SPacket.OnGroundOnly(true));
     }
 }

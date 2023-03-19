@@ -14,15 +14,25 @@ import static dev.brightshard.brightcraft.BrightCraft.LOGGER;
 */
 
 public class LockedBuffer<BufferType> {
-    private final BufferType buffer;
+    protected final BufferType buffer;
     private boolean locked = false;
+
+    public class Lock implements AutoCloseable {
+        public BufferType readBuffer() {
+            return buffer;
+        }
+
+        public void close() throws Exception {
+            unlock();
+        }
+    }
 
     public LockedBuffer(BufferType buffer) {
         this.buffer = buffer;
     }
 
     // Control the lock state
-    public synchronized BufferType lock() {
+    public synchronized Lock lock() {
         if (this.locked) {
             try {
                 this.waitForUnlock();
@@ -32,9 +42,9 @@ public class LockedBuffer<BufferType> {
             }
         }
         this.locked = true;
-        return this.buffer;
+        return new Lock();
     }
-    public synchronized void unlock() {
+    private synchronized void unlock() {
         this.locked = false;
         this.notifyAll();
     }

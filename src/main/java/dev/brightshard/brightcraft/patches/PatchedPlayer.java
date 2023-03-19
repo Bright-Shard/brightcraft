@@ -1,42 +1,93 @@
 package dev.brightshard.brightcraft.patches;
 
-import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
-import net.minecraft.util.math.BlockPos;
+import dev.brightshard.brightcraft.lib.Event.Events;
+import dev.brightshard.brightcraft.lib.Event.Listener;
+import dev.brightshard.brightcraft.lib.Event.SimpleEvent;
+import dev.brightshard.brightcraft.lib.Hack;
+import dev.brightshard.brightcraft.lib.LockedBuffer;
+import dev.brightshard.brightcraft.lib.MathTools;
 import net.minecraft.util.math.Vec3d;
 
-public interface PatchedPlayer {
-    // Tickable events
-    void movePlayer();
+import static dev.brightshard.brightcraft.BrightCraft.*;
 
-    // Movement properties
-    Vec3d getRot();
-    Vec3d getVel();
-    void setVel(Vec3d velocity);
-    boolean sneaking();
-    void sneaking(boolean isSneaking);
-    boolean noclip();
-    void noclip(boolean enabled);
+public class PatchedPlayer {
+    public Vec3d velocity = Vec3d.ZERO;
+    public boolean blockMovement = false;
+    
+    public PatchedPlayer() {
+        try (LockedBuffer<SimpleEvent>.Lock lock = Events.Tick.lock()) {
+            Listener listener = lock.readBuffer().listen(this::movePlayer);
+            listener.bound = true;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    private void movePlayer() {
+        if (this.blockMovement) {
+            this.velocity = Vec3d.ZERO;
+            return;
+        }
+
+        assert RAWCLIENT.player != null;
+        if (Hack.getHack(Hack.HackType.Fly).enabled) {
+            RAWCLIENT.player.setVelocity(this.velocity);
+        } else if (this.velocity != Vec3d.ZERO) {
+            RAWCLIENT.player.setVelocity(this.velocity);
+        }
+
+        this.velocity = Vec3d.ZERO;
+    }
+    
     // Move player
-    void moveForwards(double amount);
-    void moveBackwards(double amount);
-    void moveLeft(double amount);
-    void moveRight(double amount);
-    void moveForwardsFlat(double amount);
-    void moveBackwardsFlat(double amount);
-    void moveUp(double amount);
-    void moveDown(double amount);
+    public void moveForwards(double amount) {
+        assert RAWCLIENT.player != null;
+        this.velocity = MathTools.addVectors(this.velocity, RAWCLIENT.player.getRotationVector().multiply(amount));
+    }
+    public void moveBackwards(double amount) {
+        assert RAWCLIENT.player != null;
+        this.velocity = MathTools.addVectors(this.velocity, RAWCLIENT.player.getRotationVector().negate().multiply(amount));
+    }
+    public void moveLeft(double amount) {
+        assert RAWCLIENT.player != null;
+        Vec3d vel = RAWCLIENT.player.getRotationVector().rotateY((float) Math.toRadians(90)).multiply(amount);
+        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, this.velocity.y, vel.z));
+    }
+    public void moveRight(double amount) {
+        assert RAWCLIENT.player != null;
+        Vec3d vel = RAWCLIENT.player.getRotationVector().rotateY((float) Math.toRadians(-90)).multiply(amount);
+        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, this.velocity.y, vel.z));
+    }
 
-    // Flight
-    void setFallDistance(float distance);
-    void setAirStrafingSpeed(float speed);
-    void blockMovement(boolean blockMovement);
-    boolean blockMovement();
-
-    // Other functions
-    boolean playerWouldCollide(BlockPos pos);
-    void sendPacket(PlayerMoveC2SPacket packet);
-    void setCurrentBreakingProgress(int progress);
-    PatchedPlayerInteraction getIM();
-    void hiddenChat(String text);
+    // These movements don't affect vertical velocity
+    public void moveForwardsFlat(double amount) {
+        assert RAWCLIENT.player != null;
+        Vec3d vel = RAWCLIENT.player.getRotationVector().multiply(amount);
+        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, 0, vel.z));
+        this.velocity = new Vec3d(this.velocity.x, RAWCLIENT.player.getVelocity().y, this.velocity.z);
+    }
+    public void moveBackwardsFlat(double amount) {
+        assert RAWCLIENT.player != null;
+        Vec3d vel = RAWCLIENT.player.getRotationVector().negate().multiply(amount);
+        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, 0, vel.z));
+        this.velocity = new Vec3d(this.velocity.x, RAWCLIENT.player.getVelocity().y, this.velocity.z);
+    }
+    public void moveLeftFlat(double amount) {
+        assert RAWCLIENT.player != null;
+        Vec3d vel = RAWCLIENT.player.getRotationVector().rotateY((float) Math.toRadians(90)).multiply(amount);
+        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, 0, vel.z));
+        this.velocity = new Vec3d(this.velocity.x, RAWCLIENT.player.getVelocity().y, this.velocity.z);
+    }
+    public void moveRightFlat(double amount) {
+        assert RAWCLIENT.player != null;
+        Vec3d vel = RAWCLIENT.player.getRotationVector().rotateY((float) Math.toRadians(-90)).multiply(amount);
+        this.velocity = MathTools.addVectors(this.velocity, new Vec3d(vel.x, 0, vel.z));
+        this.velocity = new Vec3d(this.velocity.x, RAWCLIENT.player.getVelocity().y, this.velocity.z);
+    }
+    public void moveUp(double amount) {
+        this.velocity = new Vec3d(this.velocity.x, amount, this.velocity.z);
+    }
+    public void moveDown(double amount) {
+        this.velocity = new Vec3d(this.velocity.x, -amount, this.velocity.z);
+    }
 }
