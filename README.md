@@ -1,3 +1,25 @@
+# Rewrite Todo
+- [x] Rewrite events system
+- [ ] Rewrite hacks to be functional
+  - [x] Antikick
+  - [x] Flight
+  - [x] Fullbright
+  - [x] Instabreak
+  - [x] Jetpack
+  - [ ] Noclip
+  - [x] Anti-Fall Damage
+  - [x] Speed (Buggy)
+  - [x] XRay (Buggy)
+- [ ] Rewrite config
+  - [ ] ????
+- [ ] Rewrite UI
+  - [ ] BrightScreen
+  - [ ] Buttons
+  - [ ] Sliders
+- [ ] Rewrite screens
+  - [ ] Settings screen
+  - [ ] XRay screen
+
 # BrightCraft
 [![build](https://github.com/Bright-Shard/BrightCraft/actions/workflows/build.yml/badge.svg)](https://github.com/Bright-Shard/BrightCraft/actions/workflows/build.yml)
 [![release](https://img.shields.io/badge/release-latest-blue)](https://github.com/Bright-Shard/BrightCraft/releases/tag/latest)
